@@ -1,5 +1,8 @@
-import React, { Suspense } from "react";
-import RegisterClient from "./RegisterClient";
+"use client";
+
+import React, { Suspense, lazy } from "react";
+
+const RegisterClient = lazy(() => import("./RegisterClient"));
 
 export default function RegisterPage() {
   return (
