@@ -1,4 +1,5 @@
-// src/lib/firebase/config.js
+"use client"; // أو تأكد أن هذا الملف يُستخدم فقط في client
+
 import { initializeApp, getApps } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
@@ -12,33 +13,9 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-// نهيأ Firebase مرة واحدة فقط
-let app;
-let auth;
-let db;
+const app = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0];
 
-export function getFirebaseAuth() {
-  if (!auth) {
-    if (!getApps().length) {
-      app = initializeApp(firebaseConfig);
-    } else {
-      app = getApps()[0];
-    }
-    auth = getAuth(app);
-  }
-  return auth;
-}
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-export function getFirebaseDb() {
-  if (!db) {
-    if (!app) {
-      if (!getApps().length) {
-        app = initializeApp(firebaseConfig);
-      } else {
-        app = getApps()[0];
-      }
-    }
-    db = getFirestore(app);
-  }
-  return db;
-}
+export { auth, db };
