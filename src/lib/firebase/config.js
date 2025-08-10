@@ -1,3 +1,4 @@
+// src/lib/firebase/config.js
 import { initializeApp, getApps } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
@@ -11,17 +12,33 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-function initFirebase() {
-  if (typeof window === "undefined") return null; // لا تهيئة في السيرفر
-  return !getApps().length ? initializeApp(firebaseConfig) : getApps()[0];
+// نهيأ Firebase مرة واحدة فقط
+let app;
+let auth;
+let db;
+
+export function getFirebaseAuth() {
+  if (!auth) {
+    if (!getApps().length) {
+      app = initializeApp(firebaseConfig);
+    } else {
+      app = getApps()[0];
+    }
+    auth = getAuth(app);
+  }
+  return auth;
 }
 
-export function getAuthInstance() {
-  const app = initFirebase();
-  return app ? getAuth(app) : null;
-}
-
-export function getDbInstance() {
-  const app = initFirebase();
-  return app ? getFirestore(app) : null;
+export function getFirebaseDb() {
+  if (!db) {
+    if (!app) {
+      if (!getApps().length) {
+        app = initializeApp(firebaseConfig);
+      } else {
+        app = getApps()[0];
+      }
+    }
+    db = getFirestore(app);
+  }
+  return db;
 }
