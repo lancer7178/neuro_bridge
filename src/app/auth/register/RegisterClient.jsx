@@ -21,7 +21,7 @@ export default function RegisterClient() {
   }, [roleFromUrl, role]);
 
   return (
-    <div className="min-h-screen flex items-start justify-center bg-gradient-to-br from-primary-dark via-primary to-accent-soft px-4 pt-24">
+    <div className="min-h-screen flex items-start justify-center bg-gradient-to-br from-primary-dark via-primary to-accent-soft px-4 py-24">
       <div className="bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl w-full max-w-md p-8 border border-white/20">
         <h2 className="text-3xl font-bold text-center text-white mb-2">إنشاء حساب</h2>
         <p className="text-center text-white/70 mb-6 text-sm">
