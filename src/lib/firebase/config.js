@@ -3,13 +3,13 @@ import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAnp1HHvG1T8RziGDoR-8-o6tG6pAq9lwk",
-  authDomain: "neuro-bridge-6942e.firebaseapp.com",
-  projectId: "neuro-bridge-6942e",
-  storageBucket: "neuro-bridge-6942e.appspot.com",
-  messagingSenderId: "276980119212",
-  appId: "1:276980119212:web:6c2737d0208b4874425109",
-  measurementId: "G-H13J7GFBW3"
+ apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
 // لو Firebase مش مهيأ مسبقاً، يتم تهيئته. وإلا نستخدم التطبيق الموجود
