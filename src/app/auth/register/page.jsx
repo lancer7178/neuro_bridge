@@ -6,15 +6,15 @@ import { useSearchParams } from "next/navigation";
 
 export default function RegisterPage() {
   const searchParams = useSearchParams();
-  const roleFromUrl = searchParams.get("role") || "student";
-
+  const [role, setRole] = useState("student");
   const [showPassword, setShowPassword] = useState(false);
-  const [role, setRole] = useState(roleFromUrl);
 
-  // منع تغييره من داخل الصفحة
   useEffect(() => {
+    const roleFromUrlRaw = searchParams.get("role");
+    const validRoles = ["student", "teacher"];
+    const roleFromUrl = validRoles.includes(roleFromUrlRaw) ? roleFromUrlRaw : "student";
     setRole(roleFromUrl);
-  }, [roleFromUrl]);
+  }, [searchParams]);
 
   return (
     <div className="min-h-screen flex items-start justify-center bg-gradient-to-br from-primary-dark via-primary to-accent-soft px-4 pt-24">
