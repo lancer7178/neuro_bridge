@@ -85,7 +85,7 @@ export default function RegisterClient() {
         {/* رابط تسجيل الدخول */}
         <p className="mt-6 text-center text-white/80 text-sm">
           لديك حساب بالفعل؟
-          <Link href="/login" className="text-accent-soft hover:underline ml-1">
+          <Link href="/auth/login" className="text-accent-soft hover:underline ml-1">
             تسجيل الدخول
           </Link>
         </p>

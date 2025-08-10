@@ -1,5 +1,10 @@
+import React, { Suspense } from "react";
 import RegisterClient from "./RegisterClient";
 
 export default function RegisterPage() {
-  return <RegisterClient/>;
+  return (
+    <Suspense fallback={<div className="text-center p-10 text-white">جارٍ التحميل...</div>}>
+      <RegisterClient />
+    </Suspense>
+  );
 }
