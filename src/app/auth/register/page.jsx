@@ -1,4 +1,4 @@
-import RegisterClient from "./register_client/page";
+import RegisterClient from "./RegisterClient";
 
 export default function RegisterPage() {
   return <RegisterClient/>;

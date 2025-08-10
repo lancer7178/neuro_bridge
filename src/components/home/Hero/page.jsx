@@ -40,7 +40,7 @@ export default function Hero() {
         <div className="flex-1 flex justify-center">
           <div className="backdrop-blur-lg bg-white/10 p-4 rounded-3xl shadow-xl border border-white/20">
             <Image
-              src="https://images.unsplash.com/photo-1584697964154-0c8e1a6fc9f5?auto=format&fit=crop&w=800&q=80"
+              src="https://images.pexels.com/photos/1001914/pexels-photo-1001914.jpeg"
               alt="دعم التعليم"
               width={500}
               height={400}
