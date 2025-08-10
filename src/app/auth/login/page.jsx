@@ -49,7 +49,7 @@ export default function LoginPage() {
         {/* رابط لإنشاء حساب */}
         <p className="mt-6 text-center text-white/80 text-sm">
           ليس لديك حساب؟
-          <Link href="/register" className="text-accent-soft hover:underline ml-1">
+          <Link href="/auth/register" className="text-accent-soft hover:underline ml-1">
             أنشئ حساب
           </Link>
         </p>
