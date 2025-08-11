@@ -2,53 +2,56 @@ import Image from "next/image";
 
 export default function Hero() {
   return (
-    <section className="relative min-h-screen flex items-center bg-gradient-to-br from-primary-dark via-primary to-accent-soft text-white">
+    <section
+      className="relative min-h-screen flex items-center bg-gradient-to-br from-accent-soft via-primary to-primary-dark text-primary-foreground"
+      dir="rtl"
+    >
       {/* زخارف الخلفية */}
-      <div className="absolute top-0 left-0 w-72 h-72 bg-accent rounded-full opacity-20 blur-3xl"></div>
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-primary-light rounded-full opacity-20 blur-3xl"></div>
+      <div className="absolute top-0 left-0 w-72 h-72 bg-accent opacity-20 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-primary-light opacity-20 rounded-full blur-3xl"></div>
 
       {/* المحتوى */}
-      <div className="relative container mx-auto px-6 lg:px-20 flex flex-col-reverse lg:flex-row items-center gap-16">
+      <div className="relative container max-w-7xl mx-auto px-6 lg:px-20 flex flex-col-reverse lg:flex-row-reverse items-center justify-center gap-20 py-20">
         
+        {/* الصورة */}
+        <div className="flex-1 flex justify-center">
+          <div className="backdrop-blur-lg bg-white/10 p-4 rounded-3xl shadow-xl border border-white/20 transition-transform duration-500 hover:scale-105 max-w-3xl w-full">
+            <Image
+              src="https://images.pexels.com/photos/1001914/pexels-photo-1001914.jpeg"
+              alt="دعم التعليم"
+              width={600}
+              height={480}
+              className="rounded-2xl object-cover"
+              priority
+            />
+          </div>
+        </div>
+
         {/* النص */}
-        <div className="flex-1 text-center lg:text-left">
-          <h1 className="text-4xl lg:text-6xl font-bold leading-tight mb-6">
+        <div className="flex-1 text-center lg:text-right max-w-lg mx-auto lg:mx-0 px-4 lg:px-0">
+          <h1 className="text-4xl lg:text-6xl font-extrabold leading-tight mb-10 drop-shadow-md">
             مستقبل أفضل يبدأ بـ
-            <span className="text-accent"> تعليم شامل</span>
+            <span className="text-accent">{` تعليم شامل`}</span>
           </h1>
-          <p className="text-lg text-white/90 mb-8 max-w-lg mx-auto lg:mx-0">
+          <p className="text-lg text-primary-foreground/90 mb-12 leading-relaxed drop-shadow-sm">
             نقدم الدعم الأكاديمي والنفسي لطلاب ذوي الاحتياجات الخاصة، لنفتح لهم أبواب
             النجاح ونمكّنهم من تحقيق أحلامهم.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+          <div className="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start">
             <a
               href="#start"
-              className="bg-accent text-primary-dark font-semibold px-6 py-3 rounded-lg shadow-lg hover:bg-yellow-400 transition-transform transform hover:scale-105"
+              className="bg-accent text-accent-foreground font-semibold px-10 py-4 rounded-lg shadow-lg hover:bg-accent-hover transition-transform transform hover:scale-110 focus:outline-none focus:ring-4 focus:ring-accent/60"
             >
               ابدأ الآن
             </a>
             <a
               href="#learn"
-              className="border-2 border-white font-semibold px-6 py-3 rounded-lg hover:bg-white hover:text-primary-dark transition-transform transform hover:scale-105"
+              className="border-2 border-primary-foreground font-semibold px-10 py-4 rounded-lg hover:bg-primary-foreground hover:text-primary-dark transition-transform transform hover:scale-110 focus:outline-none focus:ring-4 focus:ring-primary-foreground/70"
             >
               تعرف أكثر
             </a>
           </div>
         </div>
-
-        {/* الصورة */}
-        <div className="flex-1 flex justify-center">
-          <div className="backdrop-blur-lg bg-white/10 p-4 rounded-3xl shadow-xl border border-white/20">
-            <Image
-              src="https://images.pexels.com/photos/1001914/pexels-photo-1001914.jpeg"
-              alt="دعم التعليم"
-              width={500}
-              height={400}
-              className="rounded-2xl object-cover"
-            />
-          </div>
-        </div>
-
       </div>
     </section>
   );

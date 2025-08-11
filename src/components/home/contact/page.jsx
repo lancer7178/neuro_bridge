@@ -54,7 +54,7 @@ export default function ContactSection() {
 
             <button
               type="submit"
-              className="w-full bg-accent text-blue-900 font-semibold py-3 rounded-lg shadow-lg hover:bg-yellow-300 hover:scale-[1.02] transition-transform"
+              className="w-full bg-accent text-accent-foreground font-semibold px-8 py-4 rounded-lg shadow-lg hover:bg-accent-hover transition-transform transform  focus:outline-none focus:ring-4 focus:ring-accent/60"
             >
               إرسال الرسالة
             </button>
