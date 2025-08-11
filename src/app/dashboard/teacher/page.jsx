@@ -134,19 +134,19 @@ export default function TeacherDashboard() {
             </thead>
             <tbody>
               <tr className="border-t border-gray-200">
-                <td className="py-3 px-4">مبادئ البرمجة</td>
+                <td className="py-3 px-4">دروس ميسرة </td>
                 <td className="py-3 px-4">40</td>
                 <td className="py-3 px-4 text-green-600 font-semibold">نشطة</td>
               </tr>
               <tr className="border-t border-gray-200 bg-green-50">
-                <td className="py-3 px-4">تصميم واجهات المستخدم</td>
+                <td className="py-3 px-4"> فيديوهات مترجمة بلغة الإشارة </td>
                 <td className="py-3 px-4">35</td>
                 <td className="py-3 px-4 text-yellow-600 font-semibold">
                   مجدولة
                 </td>
               </tr>
               <tr className="border-t border-gray-200">
-                <td className="py-3 px-4">تطوير تطبيقات الجوال</td>
+                <td className="py-3 px-4"> دروس ميسرة </td>
                 <td className="py-3 px-4">25</td>
                 <td className="py-3 px-4 text-red-600 font-semibold">مغلقة</td>
               </tr>

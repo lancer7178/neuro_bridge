@@ -67,13 +67,13 @@ export default function Hero() {
             transition={{ duration: 0.8, ease: "easeOut", delay: 0.6 }}
           >
             <a
-              href="#start"
+              href="/start"
               className="bg-accent text-accent-foreground font-semibold px-10 py-4 rounded-lg shadow-lg hover:bg-accent-hover transition-transform transform hover:scale-110 focus:outline-none focus:ring-4 focus:ring-accent/60"
             >
               ابدأ الآن
             </a>
             <a
-              href="#learn"
+              href="/learn"
               className="border-2 border-primary-foreground font-semibold px-10 py-4 rounded-lg hover:bg-primary-foreground hover:text-primary-dark transition-transform transform hover:scale-110 focus:outline-none focus:ring-4 focus:ring-primary-foreground/70"
             >
               تعرف أكثر

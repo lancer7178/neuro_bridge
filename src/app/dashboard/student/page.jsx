@@ -116,17 +116,17 @@ export default function StudentDashboard() {
             </thead>
             <tbody>
               <tr className="border-t border-gray-200">
-                <td className="py-3 px-4">مبادئ البرمجة</td>
+                <td className="py-3 px-4"> كتب صوتية</td>
                 <td className="py-3 px-4 text-green-600 font-semibold">نشطة</td>
                 <td className="py-3 px-4">80%</td>
               </tr>
               <tr className="border-t border-gray-200 bg-blue-50">
-                <td className="py-3 px-4">تصميم واجهات المستخدم</td>
+                <td className="py-3 px-4">فيديوهات مترجمة بلغة الإشارة</td>
                 <td className="py-3 px-4 text-yellow-600 font-semibold">مجدولة</td>
                 <td className="py-3 px-4">25%</td>
               </tr>
               <tr className="border-t border-gray-200">
-                <td className="py-3 px-4">تطوير تطبيقات الجوال</td>
+                <td className="py-3 px-4">دروس ميسرة</td>
                 <td className="py-3 px-4 text-red-600 font-semibold">مغلقة</td>
                 <td className="py-3 px-4">100%</td>
               </tr>

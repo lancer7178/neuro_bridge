@@ -15,30 +15,50 @@ export default function LoginClient() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleLogin = async () => {
-    setLoading(true);
+  async function handleLogin(e) {
+    e.preventDefault();
     setError("");
+    if (!email || !password) {
+      setError("يرجى تعبئة البريد الإلكتروني وكلمة المرور");
+      return;
+    }
+
+    setLoading(true);
+
     try {
+      // تسجيل الدخول
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
+      // جلب بيانات المستخدم من Firestore
       const docRef = doc(db, "users", user.uid);
       const docSnap = await getDoc(docRef);
 
-      if (docSnap.exists()) {
-        const userData = docSnap.data();
-        localStorage.setItem("userData", JSON.stringify(userData));
-      } else {
-        console.warn("No user data found in Firestore for user:", user.uid);
+      if (!docSnap.exists()) {
+        setError("بيانات المستخدم غير موجودة.");
+        setLoading(false);
+        return;
       }
 
+      // تخزين بيانات المستخدم محلياً (localStorage)
+      const userData = docSnap.data();
+      localStorage.setItem("userData", JSON.stringify(userData));
+
+      // إعادة التوجيه للصفحة الرئيسية
       router.push("/");
     } catch (err) {
       console.error("Login error:", err);
-      setError("خطأ في تسجيل الدخول. تحقق من البريد وكلمة المرور.");
+      if (err.code === "auth/wrong-password" || err.code === "auth/user-not-found") {
+        setError("البريد الإلكتروني أو كلمة المرور غير صحيحة.");
+      } else if (err.code === "auth/too-many-requests") {
+        setError("تم حظر المحاولة مؤقتًا. حاول لاحقًا.");
+      } else {
+        setError("خطأ غير معروف أثناء تسجيل الدخول. حاول مرة أخرى.");
+      }
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
-  };
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-dark via-primary to-accent-soft px-4">
@@ -48,46 +68,50 @@ export default function LoginClient() {
           أهلاً بك! الرجاء تسجيل الدخول لمتابعة رحلتك التعليمية
         </p>
 
-        <div className="mb-5">
-          <label className="block mb-2 text-sm text-white/80">البريد الإلكتروني</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="example@email.com"
-            className="w-full px-4 py-3 rounded-lg bg-white/20 text-white placeholder-white/50 focus:ring-2 focus:ring-accent-soft outline-none"
-          />
-        </div>
+        <form onSubmit={handleLogin}>
+          <div className="mb-5">
+            <label className="block mb-2 text-sm text-white/80">البريد الإلكتروني</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="example@email.com"
+              className="w-full px-4 py-3 rounded-lg bg-white/20 text-white placeholder-white/50 focus:ring-2 focus:ring-accent-soft outline-none"
+              required
+            />
+          </div>
 
-        <div className="mb-5 relative">
-          <label className="block mb-2 text-sm text-white/80">كلمة المرور</label>
-          <input
-            type={showPassword ? "text" : "password"}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="••••••••"
-            className="w-full px-4 py-3 rounded-lg bg-white/20 text-white placeholder-white/50 focus:ring-2 focus:ring-accent-soft outline-none"
-          />
+          <div className="mb-5 relative">
+            <label className="block mb-2 text-sm text-white/80">كلمة المرور</label>
+            <input
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              className="w-full px-4 py-3 rounded-lg bg-white/20 text-white placeholder-white/50 focus:ring-2 focus:ring-accent-soft outline-none"
+              required
+            />
+            <button
+              type="button"
+              className="absolute top-9 right-4 text-white/60 hover:text-white"
+              onClick={() => setShowPassword(!showPassword)}
+              aria-label={showPassword ? "إخفاء كلمة المرور" : "إظهار كلمة المرور"}
+            >
+              {showPassword ? <EyeOff /> : <Eye />}
+            </button>
+          </div>
+
+          {error && <p className="text-red-400 text-sm mb-3 text-center">{error}</p>}
+
           <button
-            type="button"
-            className="absolute top-9 right-4 text-white/60 hover:text-white"
-            onClick={() => setShowPassword(!showPassword)}
-            aria-label={showPassword ? "إخفاء كلمة المرور" : "إظهار كلمة المرور"}
+            type="submit"
+            disabled={loading}
+            className="w-full flex items-center justify-center gap-2 bg-accent-soft text-primary-dark font-semibold py-3 rounded-lg hover:brightness-110 transition-all disabled:opacity-50"
           >
-            {showPassword ? <EyeOff /> : <Eye />}
+            <LogIn size={20} />
+            {loading ? "جاري تسجيل الدخول..." : "تسجيل الدخول"}
           </button>
-        </div>
-
-        {error && <p className="text-red-400 text-sm mb-3">{error}</p>}
-
-        <button
-          onClick={handleLogin}
-          disabled={loading}
-          className="w-full flex items-center justify-center gap-2 bg-accent-soft text-primary-dark font-semibold py-3 rounded-lg hover:brightness-110 transition-all disabled:opacity-50"
-        >
-          <LogIn size={20} />
-          {loading ? "جاري تسجيل الدخول..." : "تسجيل الدخول"}
-        </button>
+        </form>
       </div>
     </div>
   );
