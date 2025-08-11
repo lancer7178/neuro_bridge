@@ -1,3 +1,5 @@
+
+// src/lib/firebase/config.js
 "use client"; // أو تأكد أن هذا الملف يُستخدم فقط في client
 
 import { initializeApp, getApps } from "firebase/app";

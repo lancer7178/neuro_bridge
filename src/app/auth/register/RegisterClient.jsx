@@ -1,33 +1,28 @@
 "use client";
 
-import Link from "next/link";
 import { useState, useEffect } from "react";
-import { UserPlus, Eye, EyeOff } from "lucide-react";
-import { useSearchParams, useRouter } from "next/navigation";
-
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase/config";
+import { UserPlus, Eye, EyeOff } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 
 export default function RegisterClient() {
   const searchParams = useSearchParams();
-  const router = useRouter();
 
-  const roleFromUrlRaw = searchParams.get("role");
   const validRoles = ["student", "teacher"];
+  const roleFromUrlRaw = searchParams.get("role");
   const roleFromUrl = validRoles.includes(roleFromUrlRaw) ? roleFromUrlRaw : "student";
-
-  const [showPassword, setShowPassword] = useState(false);
-  const [role, setRole] = useState(roleFromUrl);
 
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState(roleFromUrl);
+  const [showPassword, setShowPassword] = useState(false);
 
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  const [redirect, setRedirect] = useState(false); // New state for redirect control
 
   useEffect(() => {
     if (role !== roleFromUrl) {
@@ -35,46 +30,47 @@ export default function RegisterClient() {
     }
   }, [roleFromUrl, role]);
 
-  useEffect(() => {
-    // Trigger redirect after success message is set
-    if (successMessage && !redirect) {
-      const timer = setTimeout(() => {
-        setRedirect(true);
-        router.push("/account");
-      }, 1500); // 1500ms delay to show success message
-      return () => clearTimeout(timer); // Cleanup timer
-    }
-  }, [successMessage, redirect, router]);
-
   async function handleRegister(e) {
     e.preventDefault();
     setError("");
     setSuccessMessage("");
-    setLoading(true);
 
     if (!fullName || !email || !password) {
       setError("يرجى تعبئة جميع الحقول");
-      setLoading(false);
       return;
     }
 
+    setLoading(true);
     try {
+      console.log("بدأ إنشاء المستخدم...");
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
+      console.log("تم إنشاء المستخدم:", user.uid);
 
-      await setDoc(doc(db, "users", user.uid), {
+      const userInfo = {
         fullName,
         email,
         role,
+        profilePic: `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=random&color=fff`,
         createdAt: serverTimestamp(),
-      });
+      };
+
+      await setDoc(doc(db, "users", user.uid), userInfo);
+      console.log("تم حفظ بيانات المستخدم في Firestore");
+
+      const userInfoForStorage = { ...userInfo };
+      delete userInfoForStorage.createdAt;
+      localStorage.setItem("userData", JSON.stringify(userInfoForStorage));
 
       setSuccessMessage("تم إنشاء الحساب بنجاح!");
-      setLoading(false); // Reset loading state
-      setRedirect(false); // Reset redirect state
+      setFullName("");
+      setEmail("");
+      setPassword("");
     } catch (err) {
-      setLoading(false);
+      console.error("خطأ أثناء إنشاء الحساب:", err);
       setError(err.message || "حدث خطأ أثناء إنشاء الحساب");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -122,6 +118,7 @@ export default function RegisterClient() {
               type="button"
               className="absolute top-9 right-4 text-white/60 hover:text-white"
               onClick={() => setShowPassword(!showPassword)}
+              aria-label={showPassword ? "إخفاء كلمة المرور" : "إظهار كلمة المرور"}
             >
               {showPassword ? <EyeOff /> : <Eye />}
             </button>
@@ -138,13 +135,11 @@ export default function RegisterClient() {
 
           <button
             type="submit"
-            disabled={loading || successMessage !== ""}
-            className={`w-full flex items-center justify-center gap-2 bg-accent-soft text-primary-dark font-semibold py-3 rounded-lg hover:brightness-110 transition-all ${
-              loading || successMessage !== "" ? "opacity-60 cursor-not-allowed" : ""
-            }`}
+            disabled={loading}
+            className="w-full flex items-center justify-center gap-2 bg-accent-soft text-primary-dark font-semibold py-3 rounded-lg hover:brightness-110 transition-all disabled:opacity-50"
           >
             <UserPlus size={20} />
-            {loading ? "جارٍ الإنشاء..." : successMessage ? "تم الإنشاء!" : "إنشاء الحساب"}
+            {loading ? "جارٍ الإنشاء..." : "إنشاء الحساب"}
           </button>
         </form>
 
@@ -152,10 +147,10 @@ export default function RegisterClient() {
         {successMessage && <p className="mt-4 text-center text-green-500 text-sm">{successMessage}</p>}
 
         <p className="mt-6 text-center text-white/80 text-sm">
-          لديك حساب بالفعل?
-          <Link href="/auth/login" className="text-accent-soft hover:underline ml-1">
+          لديك حساب بالفعل؟
+          <a href="/auth/login" className="text-accent-soft hover:underline ml-1">
             تسجيل الدخول
-          </Link>
+          </a>
         </p>
       </div>
     </div>

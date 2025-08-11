@@ -2,10 +2,13 @@
 
 import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "@/lib/firebase/config"; // تأكد من مسار ملف config الخاص بفايربيز
+import { auth, db } from "@/lib/firebase/config";
+import { doc, getDoc } from "firebase/firestore";
 import { Eye, EyeOff, LogIn } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function LoginClient() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -16,13 +19,23 @@ export default function LoginClient() {
     setLoading(true);
     setError("");
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      // تسجيل الدخول تم بنجاح
-      // يمكنك هنا عمل إعادة توجيه أو غيرها
-      alert("تم تسجيل الدخول بنجاح!");
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      const docRef = doc(db, "users", user.uid);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const userData = docSnap.data();
+        localStorage.setItem("userData", JSON.stringify(userData));
+      } else {
+        console.warn("No user data found in Firestore for user:", user.uid);
+      }
+
+      router.push("/");
     } catch (err) {
-      // التعامل مع الخطأ
-      setError(err.message);
+      console.error("Login error:", err);
+      setError("خطأ في تسجيل الدخول. تحقق من البريد وكلمة المرور.");
     }
     setLoading(false);
   };
@@ -59,19 +72,18 @@ export default function LoginClient() {
             type="button"
             className="absolute top-9 right-4 text-white/60 hover:text-white"
             onClick={() => setShowPassword(!showPassword)}
+            aria-label={showPassword ? "إخفاء كلمة المرور" : "إظهار كلمة المرور"}
           >
             {showPassword ? <EyeOff /> : <Eye />}
           </button>
         </div>
 
-        {error && (
-          <p className="text-red-400 text-sm mb-3">{error}</p>
-        )}
+        {error && <p className="text-red-400 text-sm mb-3">{error}</p>}
 
         <button
           onClick={handleLogin}
           disabled={loading}
-          className="w-full flex items-center justify-center gap-2 bg-accent-soft text-primary-dark font-semibold py-3 rounded-lg hover:brightness-110 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full flex items-center justify-center gap-2 bg-accent-soft text-primary-dark font-semibold py-3 rounded-lg hover:brightness-110 transition-all disabled:opacity-50"
         >
           <LogIn size={20} />
           {loading ? "جاري تسجيل الدخول..." : "تسجيل الدخول"}

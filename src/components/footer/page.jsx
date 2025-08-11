@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Facebook, Twitter, Instagram, Linkedin, Youtube, Mail } from "lucide-react";
 
 export default function Footer() {
@@ -23,14 +24,19 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-4">الدعم والمساعدة</h3>
             <ul className="space-y-2">
-              {["مركز المساعدة", "الأسئلة الشائعة", "التواصل مع فريق الدعم", "الإبلاغ عن مشكلة"].map((link, i) => (
+              {[
+                { name: "مركز المساعدة", href: "/help-center" },
+                { name: "الأسئلة الشائعة", href: "/faq" },
+                { name: "التواصل مع فريق الدعم", href: "/contact-support" },
+                { name: "الإبلاغ عن مشكلة", href: "/report-problem" },
+              ].map((link, i) => (
                 <li key={i}>
-                  <a
-                    href="#"
+                  <Link
+                    href={link.href}
                     className="hover:text-accent transition-colors focus:outline focus:ring-2 focus:ring-accent"
                   >
-                    {link}
-                  </a>
+                    {link.name}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -40,14 +46,19 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-4">المحتوى التعليمي</h3>
             <ul className="space-y-2">
-              {["دروس ميسرة", "كتب صوتية", "فيديوهات مترجمة بلغة الإشارة", "مقالات توعوية"].map((item, i) => (
+              {[
+                { name: "دروس ميسرة", href: "/lessons" },
+                { name: "كتب صوتية", href: "/audiobooks" },
+                { name: "فيديوهات مترجمة بلغة الإشارة", href: "/sign-language-videos" },
+                { name: "مقالات توعوية", href: "/awareness-articles" },
+              ].map((item, i) => (
                 <li key={i}>
-                  <a
-                    href="#"
+                  <Link
+                    href={item.href}
                     className="hover:text-accent transition-colors focus:outline focus:ring-2 focus:ring-accent"
                   >
-                    {item}
-                  </a>
+                    {item.name}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -57,22 +68,22 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-4">تواصل معنا</h3>
             <a
-              href="mailto:support@taallum.com"
+              href="mailto:support@neuro_bridge.com"
               className="flex items-center gap-2 mb-4 hover:text-accent focus:outline focus:ring-2 focus:ring-accent"
             >
               <Mail size={18} /> support@neuro_bridge.com
             </a>
             <div className="flex flex-wrap gap-3">
               {[
-                { Icon: Facebook, label: "فيسبوك" },
-                { Icon: Twitter, label: "تويتر" },
-                { Icon: Instagram, label: "انستغرام" },
-                { Icon: Linkedin, label: "لينكدإن" },
-                { Icon: Youtube, label: "يوتيوب" },
-              ].map(({ Icon, label }, i) => (
+                { Icon: Facebook, label: "فيسبوك", href: "#" },
+                { Icon: Twitter, label: "تويتر", href: "#" },
+                { Icon: Instagram, label: "انستغرام", href: "#" },
+                { Icon: Linkedin, label: "لينكدإن", href: "#" },
+                { Icon: Youtube, label: "يوتيوب", href: "#" },
+              ].map(({ Icon, label, href }, i) => (
                 <a
                   key={i}
-                  href="#"
+                  href={href}
                   className="flex items-center gap-2 bg-white/10 px-3 py-2 rounded-lg hover:bg-accent hover:text-primary-dark transition-colors focus:outline focus:ring-2 focus:ring-accent"
                 >
                   <Icon size={18} /> <span className="text-sm">{label}</span>
@@ -86,8 +97,8 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-center text-sm text-white/80 pt-6">
           <p>© {new Date().getFullYear()} Neuro bridge. جميع الحقوق محفوظة.</p>
           <div className="mt-4 md:mt-0">
-            <a href="#" className="hover:text-accent mx-2 transition-colors">سياسة الخصوصية</a>
-            <a href="#" className="hover:text-accent mx-2 transition-colors">الشروط والأحكام</a>
+            <Link href="/privacy-policy" className="hover:text-accent mx-2 transition-colors">سياسة الخصوصية</Link>
+            <Link href="/terms" className="hover:text-accent mx-2 transition-colors">الشروط والأحكام</Link>
           </div>
         </div>
       </div>
