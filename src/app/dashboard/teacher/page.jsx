@@ -127,36 +127,38 @@ export default function TeacherDashboard() {
         <h2 className="text-2xl font-bold mb-4 text-gray-800">
           الدورات التي تشرف عليها
         </h2>
-        <div className="overflow-x-auto">
-          <table className="min-w-full border border-gray-200 rounded-lg overflow-hidden">
-            <thead className="bg-green-100 text-green-700">
-              <tr>
-                <th className="py-3 px-4 text-left">اسم الدورة</th>
-                <th className="py-3 px-4 text-left">عدد الطلاب</th>
-                <th className="py-3 px-4 text-left">الحالة</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="border-t border-gray-200">
-                <td className="py-3 px-4">دروس ميسرة </td>
-                <td className="py-3 px-4">40</td>
-                <td className="py-3 px-4 text-green-600 font-semibold">نشطة</td>
-              </tr>
-              <tr className="border-t border-gray-200 bg-green-50">
-                <td className="py-3 px-4"> فيديوهات مترجمة بلغة الإشارة </td>
-                <td className="py-3 px-4">35</td>
-                <td className="py-3 px-4 text-yellow-600 font-semibold">
-                  مجدولة
-                </td>
-              </tr>
-              <tr className="border-t border-gray-200">
-                <td className="py-3 px-4"> دروس ميسرة </td>
-                <td className="py-3 px-4">25</td>
-                <td className="py-3 px-4 text-red-600 font-semibold">مغلقة</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+     <div className="overflow-x-auto">
+  <table
+    dir="rtl"
+    className="min-w-full border border-gray-200 rounded-lg overflow-hidden shadow-md"
+  >
+    <thead className="bg-green-600 text-white">
+      <tr>
+        <th className="py-3 px-4 text-right font-semibold">اسم الدورة</th>
+        <th className="py-3 px-4 text-right font-semibold">عدد الطلاب</th>
+        <th className="py-3 px-4 text-right font-semibold">الحالة</th>
+      </tr>
+    </thead>
+    <tbody className="divide-y divide-gray-200">
+      <tr className="hover:bg-green-50 transition-colors duration-200">
+        <td className="py-3 px-4">دروس ميسرة</td>
+        <td className="py-3 px-4">40</td>
+        <td className="py-3 px-4 text-green-600 font-semibold">نشطة</td>
+      </tr>
+      <tr className="bg-green-50 hover:bg-green-100 transition-colors duration-200">
+        <td className="py-3 px-4">فيديوهات مترجمة بلغة الإشارة</td>
+        <td className="py-3 px-4">35</td>
+        <td className="py-3 px-4 text-yellow-600 font-semibold">مجدولة</td>
+      </tr>
+      <tr className="hover:bg-green-50 transition-colors duration-200">
+        <td className="py-3 px-4">دروس ميسرة</td>
+        <td className="py-3 px-4">25</td>
+        <td className="py-3 px-4 text-red-600 font-semibold">مغلقة</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
       </section>
     </main>
   );

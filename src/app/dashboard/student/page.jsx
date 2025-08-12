@@ -119,36 +119,58 @@ export default function StudentDashboard() {
         <h2 className="text-2xl font-bold mb-4 text-gray-800">
           دوراتك الحالية
         </h2>
-        <div className="overflow-x-auto">
-          <table className="min-w-full border border-gray-200 rounded-lg overflow-hidden">
-            <thead className="bg-blue-100 text-blue-700">
-              <tr>
-                <th className="py-3 px-4 text-left">اسم الدورة</th>
-                <th className="py-3 px-4 text-left">الحالة</th>
-                <th className="py-3 px-4 text-left">التقدم</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="border-t border-gray-200">
-                <td className="py-3 px-4"> كتب صوتية</td>
-                <td className="py-3 px-4 text-green-600 font-semibold">نشطة</td>
-                <td className="py-3 px-4">80%</td>
-              </tr>
-              <tr className="border-t border-gray-200 bg-blue-50">
-                <td className="py-3 px-4">فيديوهات مترجمة بلغة الإشارة</td>
-                <td className="py-3 px-4 text-yellow-600 font-semibold">
-                  مجدولة
-                </td>
-                <td className="py-3 px-4">25%</td>
-              </tr>
-              <tr className="border-t border-gray-200">
-                <td className="py-3 px-4">دروس ميسرة</td>
-                <td className="py-3 px-4 text-red-600 font-semibold">مغلقة</td>
-                <td className="py-3 px-4">100%</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+   <div className="overflow-x-auto">
+  <table
+    dir="rtl"
+    className="min-w-full border border-gray-200 rounded-lg overflow-hidden shadow-md"
+  >
+    <thead className="bg-blue-600 text-white">
+      <tr>
+        <th className="py-3 px-4 text-right font-semibold">اسم الدورة</th>
+        <th className="py-3 px-4 text-right font-semibold">الحالة</th>
+        <th className="py-3 px-4 text-right font-semibold">التقدم</th>
+      </tr>
+    </thead>
+    <tbody className="divide-y divide-gray-200">
+      {/* الصف الأول */}
+      <tr className="hover:bg-blue-50 transition-colors duration-200">
+        <td className="py-3 px-4">كتب صوتية</td>
+        <td className="py-3 px-4 text-green-600 font-semibold">نشطة</td>
+        <td className="py-3 px-4">
+          <div className="w-full bg-gray-200 rounded-full h-3">
+            <div className="bg-green-500 h-3 rounded-full" style={{ width: "80%" }}></div>
+          </div>
+          <span className="text-sm text-gray-600">80%</span>
+        </td>
+      </tr>
+
+      {/* الصف الثاني */}
+      <tr className="bg-blue-50 hover:bg-blue-100 transition-colors duration-200">
+        <td className="py-3 px-4">فيديوهات مترجمة بلغة الإشارة</td>
+        <td className="py-3 px-4 text-yellow-600 font-semibold">مجدولة</td>
+        <td className="py-3 px-4">
+          <div className="w-full bg-gray-200 rounded-full h-3">
+            <div className="bg-yellow-500 h-3 rounded-full" style={{ width: "25%" }}></div>
+          </div>
+          <span className="text-sm text-gray-600">25%</span>
+        </td>
+      </tr>
+
+      {/* الصف الثالث */}
+      <tr className="hover:bg-blue-50 transition-colors duration-200">
+        <td className="py-3 px-4">دروس ميسرة</td>
+        <td className="py-3 px-4 text-red-600 font-semibold">مغلقة</td>
+        <td className="py-3 px-4">
+          <div className="w-full bg-gray-200 rounded-full h-3">
+            <div className="bg-red-500 h-3 rounded-full" style={{ width: "100%" }}></div>
+          </div>
+          <span className="text-sm text-gray-600">100%</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
       </section>
     </main>
   );
