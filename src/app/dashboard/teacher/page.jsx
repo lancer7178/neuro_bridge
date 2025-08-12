@@ -48,7 +48,11 @@ export default function TeacherDashboard() {
   }
 
   return (
-<main className="pt-24 max-w-5xl mx-auto p-8 bg-white rounded-lg shadow-lg">      {" "}
+    <main
+      dir="rtl"
+      className="pt-24 max-w-5xl mx-auto p-8 bg-white rounded-lg shadow-lg "
+    >
+      {" "}
       <header className="flex items-center gap-6 mb-8">
         {/* صورة أو أول حرف الاسم */}
         <div className="w-24 h-24 rounded-full bg-green-600 flex items-center justify-center text-white text-4xl font-bold select-none">
@@ -64,7 +68,7 @@ export default function TeacherDashboard() {
         </div>
         <button
           onClick={handleLogout}
-          className="ml-auto px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+          className="mr-auto px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
           aria-label="تسجيل خروج"
         >
           تسجيل خروج

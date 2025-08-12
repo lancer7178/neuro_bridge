@@ -10,7 +10,7 @@ export default function AwarenessArticlesPage() {
   ];
 
   return (
-    <main className="bg-background">
+    <main dir="rtl" className="bg-background">
       <section className="py-24 bg-gradient-to-r from-primary to-destructive text-white">
         <div className="container mx-auto px-6 lg:px-20">
           <motion.div initial={{ opacity: 0, y: -30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="flex items-center gap-4">

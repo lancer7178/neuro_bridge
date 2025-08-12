@@ -5,7 +5,7 @@ import { Headphones } from "lucide-react";
 
 export default function ContactSupportPage() {
   return (
-    <main className="bg-background">
+    <main dir="rtl" className="bg-background">
       <section className="py-24 bg-gradient-to-r from-primary to-secondary text-white">
         <div className="container mx-auto px-6 lg:px-20">
           <motion.div
