@@ -48,7 +48,7 @@ export default function StudentDashboard() {
   }
 
   return (
-    <main className="pt-24 max-w-5xl mx-auto p-8 bg-white rounded-lg shadow-lg ">
+    <main dir="rtl" className="pt-24 max-w-5xl mx-auto p-8 bg-white rounded-lg shadow-lg ">
       {" "}
       <header className="flex items-center gap-6 mb-8">
         <div className="w-24 h-24 rounded-full bg-blue-600 flex items-center justify-center text-white text-4xl font-bold select-none">
