@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "@/lib/firebase/config";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, getDocFromCache } from "firebase/firestore";
 import { Eye, EyeOff, LogIn } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -27,30 +27,92 @@ export default function LoginClient() {
 
     try {
       // تسجيل الدخول
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       const user = userCredential.user;
 
-      // جلب بيانات المستخدم من Firestore
-      const docRef = doc(db, "users", user.uid);
-      const docSnap = await getDoc(docRef);
-
-      if (!docSnap.exists()) {
-        setError("بيانات المستخدم غير موجودة.");
-        setLoading(false);
-        return;
+      // حفظ بيانات أساسية فوراً لتقليل زمن الإحساس بالاستجابة
+      const minimalUser = {
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName || null,
+      };
+      try {
+        // small sync write so UI can read it immediately
+        localStorage.setItem("userData", JSON.stringify(minimalUser));
+        // notify any listeners (e.g., navbar) that user data changed
+        try {
+          window.dispatchEvent(new Event("userDataChanged"));
+        } catch (e) {
+          /* ignore: non-critical */
+        }
+      } catch (e) {
+        console.warn("localStorage write failed (minimal):", e);
       }
 
-      // تخزين بيانات المستخدم محلياً (localStorage)
-      const userData = docSnap.data();
-      localStorage.setItem("userData", JSON.stringify(userData));
+      // حاول جلب مستند المستخدم من كاش Firestore بسرعة (إذا كان مُمكَّنًا)
+      try {
+        const cachedRef = doc(db, "users", user.uid);
+        try {
+          const cachedSnap = await getDocFromCache(cachedRef);
+          if (cachedSnap && cachedSnap.exists()) {
+            const fullCached = cachedSnap.data();
+            const merged = {
+              ...fullCached,
+              email: user.email,
+              role: (fullCached.role || "").toLowerCase(),
+            };
+            localStorage.setItem("userData", JSON.stringify(merged));
+            try {
+              window.dispatchEvent(new Event("userDataChanged"));
+            } catch (e) {}
+          }
+        } catch (cacheErr) {
+          // cache miss is normal; we'll fetch in background below
+        }
+      } catch (e) {
+        console.warn("Quick cache read failed:", e);
+      }
 
-      // إعادة التوجيه للصفحة الرئيسية
+      // توجه فوراً للصفحة الرئيسية لإعطاء إحساس أسرع بالتجاوب
       router.push("/");
+
+      // اجلب بيانات المستخدم الكاملة في الخلفية وحدث التخزين عند الوصول
+      (async () => {
+        try {
+          const docRef = doc(db, "users", user.uid);
+          const docSnap = await getDoc(docRef);
+          if (docSnap.exists()) {
+            const fullData = docSnap.data();
+            // defer write to avoid blocking the UI thread
+            setTimeout(() => {
+              try {
+                localStorage.setItem("userData", JSON.stringify(fullData));
+                try {
+                  window.dispatchEvent(new Event("userDataChanged"));
+                } catch (e) {
+                  /* ignore */
+                }
+              } catch (e) {
+                console.warn("localStorage write failed (full):", e);
+              }
+            }, 0);
+          } else {
+            console.warn("User doc not found (background fetch).");
+          }
+        } catch (bgErr) {
+          console.error("Background fetch user doc failed:", bgErr);
+        }
+      })();
     } catch (err) {
       console.error("Login error:", err);
-      if (err.code === "auth/wrong-password" || err.code === "auth/user-not-found") {
+      const code = err?.code || "";
+      if (code === "auth/wrong-password" || code === "auth/user-not-found") {
         setError("البريد الإلكتروني أو كلمة المرور غير صحيحة.");
-      } else if (err.code === "auth/too-many-requests") {
+      } else if (code === "auth/too-many-requests") {
         setError("تم حظر المحاولة مؤقتًا. حاول لاحقًا.");
       } else {
         setError("خطأ غير معروف أثناء تسجيل الدخول. حاول مرة أخرى.");
@@ -63,14 +125,18 @@ export default function LoginClient() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-dark via-primary to-accent-soft px-4">
       <div className="bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl w-full max-w-md p-8 border border-white/20">
-        <h2 className="text-3xl font-bold text-center text-white mb-2">تسجيل الدخول</h2>
+        <h2 className="text-3xl font-bold text-center text-white mb-2">
+          تسجيل الدخول
+        </h2>
         <p className="text-center text-white/70 mb-6 text-sm">
           أهلاً بك! الرجاء تسجيل الدخول لمتابعة رحلتك التعليمية
         </p>
 
         <form onSubmit={handleLogin}>
           <div className="mb-5">
-            <label className="block mb-2 text-sm text-white/80">البريد الإلكتروني</label>
+            <label className="block mb-2 text-sm text-white/80">
+              البريد الإلكتروني
+            </label>
             <input
               type="email"
               value={email}
@@ -82,7 +148,9 @@ export default function LoginClient() {
           </div>
 
           <div className="mb-5 relative">
-            <label className="block mb-2 text-sm text-white/80">كلمة المرور</label>
+            <label className="block mb-2 text-sm text-white/80">
+              كلمة المرور
+            </label>
             <input
               type={showPassword ? "text" : "password"}
               value={password}
@@ -95,13 +163,17 @@ export default function LoginClient() {
               type="button"
               className="absolute top-9 right-4 text-white/60 hover:text-white"
               onClick={() => setShowPassword(!showPassword)}
-              aria-label={showPassword ? "إخفاء كلمة المرور" : "إظهار كلمة المرور"}
+              aria-label={
+                showPassword ? "إخفاء كلمة المرور" : "إظهار كلمة المرور"
+              }
             >
               {showPassword ? <EyeOff /> : <Eye />}
             </button>
           </div>
 
-          {error && <p className="text-red-400 text-sm mb-3 text-center">{error}</p>}
+          {error && (
+            <p className="text-red-400 text-sm mb-3 text-center">{error}</p>
+          )}
 
           <button
             type="submit"

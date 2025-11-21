@@ -23,8 +23,83 @@ export default function Navbar() {
   useEffect(() => {
     const storedUser = localStorage.getItem("userData");
     if (storedUser) {
-      setUserData(JSON.parse(storedUser));
+      try {
+        const parsed = JSON.parse(storedUser);
+        // normalize role casing so rendering checks are reliable
+        parsed.role = (parsed.role || "").toLowerCase();
+        setUserData(parsed);
+
+        // إذا لم يحتوي التخزين على role، حاول جلبه بسرعة من كاش Firestore
+        if ((!parsed.role || parsed.role === "") && auth?.currentUser?.uid) {
+          (async () => {
+            try {
+              const docRef = doc(db, "users", auth.currentUser.uid);
+              const docSnap = await getDoc(docRef);
+              if (docSnap.exists()) {
+                const userInfoRaw = {
+                  ...docSnap.data(),
+                  email: auth.currentUser.email,
+                };
+                const userInfo = {
+                  ...userInfoRaw,
+                  role: (userInfoRaw.role || "").toLowerCase(),
+                };
+                setUserData(userInfo);
+                localStorage.setItem("userData", JSON.stringify(userInfo));
+              }
+            } catch (err) {
+              console.warn("Navbar quick fetch failed:", err);
+            }
+          })();
+        }
+      } catch (e) {
+        console.warn("Failed to parse stored userData:", e);
+      }
     }
+  }, []);
+
+  // استمع ل حدث تغيّر بيانات المستخدم من صفحات أخرى (مثلاً بعد تسجيل الدخول)
+  useEffect(() => {
+    const onUserDataChanged = async () => {
+      const stored = localStorage.getItem("userData");
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          parsed.role = (parsed.role || "").toLowerCase();
+          setUserData(parsed);
+
+          // if role missing, fetch quickly from Firestore (cache preferred)
+          if ((!parsed.role || parsed.role === "") && auth?.currentUser?.uid) {
+            try {
+              const docRef = doc(db, "users", auth.currentUser.uid);
+              const docSnap = await getDoc(docRef);
+              if (docSnap.exists()) {
+                const userInfoRaw = {
+                  ...docSnap.data(),
+                  email: auth.currentUser.email,
+                };
+                const userInfo = {
+                  ...userInfoRaw,
+                  role: (userInfoRaw.role || "").toLowerCase(),
+                };
+                setUserData(userInfo);
+                localStorage.setItem("userData", JSON.stringify(userInfo));
+              }
+            } catch (err) {
+              console.warn("Navbar background fetch failed:", err);
+            }
+          }
+        } catch (e) {
+          console.warn("Failed to parse userData from localStorage:", e);
+        }
+      } else {
+        setUserData(null);
+      }
+    };
+
+    window.addEventListener("userDataChanged", onUserDataChanged);
+    return () =>
+      window.removeEventListener("userDataChanged", onUserDataChanged);
   }, []);
 
   // متابعة حالة تسجيل الدخول
@@ -37,9 +112,17 @@ export default function Navbar() {
 
           let userInfo;
           if (docSnap.exists()) {
-            userInfo = { ...docSnap.data(), email: currentUser.email };
+            const userInfoRaw = { ...docSnap.data(), email: currentUser.email };
+            userInfo = {
+              ...userInfoRaw,
+              role: (userInfoRaw.role || "").toLowerCase(),
+            };
           } else {
-            userInfo = { email: currentUser.email, fullName: "", role: "student" };
+            userInfo = {
+              email: currentUser.email,
+              fullName: "",
+              role: "student",
+            };
           }
 
           // حفظ البيانات في state و localStorage
@@ -74,10 +157,26 @@ export default function Navbar() {
 
         {/* Desktop Menu */}
         <ul className="hidden md:flex gap-6 items-center font-medium">
-          <li><Link href="/" className="hover:text-secondary">الرئيسية</Link></li>
-          <li><Link href="#services" className="hover:text-secondary">الخدمات</Link></li>
-          <li><Link href="#about" className="hover:text-secondary">من نحن</Link></li>
-          <li><Link href="#contact" className="hover:text-secondary">تواصل معنا</Link></li>
+          <li>
+            <Link href="/" className="hover:text-secondary">
+              الرئيسية
+            </Link>
+          </li>
+          <li>
+            <Link href="#services" className="hover:text-secondary">
+              الخدمات
+            </Link>
+          </li>
+          <li>
+            <Link href="#about" className="hover:text-secondary">
+              من نحن
+            </Link>
+          </li>
+          <li>
+            <Link href="#contact" className="hover:text-secondary">
+              تواصل معنا
+            </Link>
+          </li>
 
           {!userData && (
             <>
@@ -132,6 +231,8 @@ export default function Navbar() {
               </li>
 
               {/* رابط مختلف حسب نوع الحساب */}
+              {/* عرض روابط محددة بالدور فقط (نحاول جلب الدور سريعًا في الخلفية) */}
+
               {userData.role === "teacher" && (
                 <li>
                   <Link
@@ -177,10 +278,26 @@ export default function Navbar() {
       {/* Mobile Menu */}
       {menuOpen && (
         <ul className="md:hidden bg-primary text-primary-foreground px-6 py-4 space-y-3 font-medium shadow-lg">
-          <li><Link href="/" onClick={() => setMenuOpen(false)}>الرئيسية</Link></li>
-          <li><Link href="#services" onClick={() => setMenuOpen(false)}>الخدمات</Link></li>
-          <li><Link href="#about" onClick={() => setMenuOpen(false)}>من نحن</Link></li>
-          <li><Link href="#contact" onClick={() => setMenuOpen(false)}>تواصل معنا</Link></li>
+          <li>
+            <Link href="/" onClick={() => setMenuOpen(false)}>
+              الرئيسية
+            </Link>
+          </li>
+          <li>
+            <Link href="#services" onClick={() => setMenuOpen(false)}>
+              الخدمات
+            </Link>
+          </li>
+          <li>
+            <Link href="#about" onClick={() => setMenuOpen(false)}>
+              من نحن
+            </Link>
+          </li>
+          <li>
+            <Link href="#contact" onClick={() => setMenuOpen(false)}>
+              تواصل معنا
+            </Link>
+          </li>
 
           {!userData && (
             <>
@@ -247,6 +364,8 @@ export default function Navbar() {
                   </Link>
                 </li>
               )}
+
+              {/* لا نعرض رابط عام هنا — ننتظر دور المستخدم ليظهر الرابط المخصص */}
 
               <li>
                 <button
