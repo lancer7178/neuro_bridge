@@ -30,21 +30,21 @@ export default function Services() {
   return (
     <section
       id="services"
-      className="relative py-20 overflow-hidden bg-gradient-to-b from-background-light via-white to-background-light"
+      className="relative py-12 sm:py-20 overflow-hidden bg-gradient-to-b from-background-light via-white to-background-light"
     >
       {/* زخرفة خلفية مع حركة */}
       <motion.div
         animate={{ y: [0, -30, 0] }}
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute -top-20 -left-20 w-96 h-96 bg-primary/10 rounded-full blur-3xl"
+        className="absolute -top-20 -left-32 sm:-left-20 w-64 sm:w-96 h-64 sm:h-96 bg-primary/10 rounded-full blur-3xl"
       ></motion.div>
       <motion.div
         animate={{ x: [0, 30, 0] }}
         transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute bottom-0 -right-20 w-96 h-96 bg-accent/10 rounded-full blur-3xl"
+        className="absolute bottom-0 -right-32 sm:-right-20 w-64 sm:w-96 h-64 sm:h-96 bg-accent/10 rounded-full blur-3xl"
       ></motion.div>
 
-      <div className="container mx-auto px-6 lg:px-20 text-center relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-20 text-center relative z-10">
         <motion.h2
           className="text-4xl font-bold mb-6 text-primary-dark"
           initial={{ opacity: 0, y: -20 }}
@@ -61,11 +61,12 @@ export default function Services() {
           transition={{ duration: 0.6, delay: 0.2 }}
           viewport={{ once: true }}
         >
-          نقدم مجموعة من الخدمات المصممة خصيصًا لدعم الطلاب ذوي الاحتياجات الخاصة على المستوى الأكاديمي والنفسي والاجتماعي.
+          نقدم مجموعة من الخدمات المصممة خصيصًا لدعم الطلاب ذوي الاحتياجات
+          الخاصة على المستوى الأكاديمي والنفسي والاجتماعي.
         </motion.p>
 
         {/* بطاقات الخدمات مع انيميشن متتالية */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
           {services.map((service, index) => (
             <motion.div
               key={index}
@@ -78,7 +79,10 @@ export default function Services() {
             >
               <motion.div
                 className="mb-4 flex justify-center"
-                whileHover={{ rotate: [0, -10, 10, -10, 0], transition: { duration: 0.6 } }}
+                whileHover={{
+                  rotate: [0, -10, 10, -10, 0],
+                  transition: { duration: 0.6 },
+                }}
               >
                 {service.icon}
               </motion.div>

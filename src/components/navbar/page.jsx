@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Menu,
   X,
@@ -10,148 +11,40 @@ import {
   GraduationCap,
   LogOut,
 } from "lucide-react";
-import { auth, db } from "@/lib/firebase/config";
-import { onAuthStateChanged, signOut } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import { useAuth } from "@/lib/AuthContext";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [userData, setUserData] = useState(null);
 
-  // جلب البيانات من localStorage عند أول تحميل
+  // Use centralized Auth context
+  const {
+    user: currentUser,
+    profile: authProfile,
+    loading,
+    logout,
+  } = useAuth();
+
+  // Keep local derived state for any small UI interactions
   useEffect(() => {
-    const storedUser = localStorage.getItem("userData");
-    if (storedUser) {
-      try {
-        const parsed = JSON.parse(storedUser);
-        // normalize role casing so rendering checks are reliable
-        parsed.role = (parsed.role || "").toLowerCase();
-        setUserData(parsed);
-
-        // إذا لم يحتوي التخزين على role، حاول جلبه بسرعة من كاش Firestore
-        if ((!parsed.role || parsed.role === "") && auth?.currentUser?.uid) {
-          (async () => {
-            try {
-              const docRef = doc(db, "users", auth.currentUser.uid);
-              const docSnap = await getDoc(docRef);
-              if (docSnap.exists()) {
-                const userInfoRaw = {
-                  ...docSnap.data(),
-                  email: auth.currentUser.email,
-                };
-                const userInfo = {
-                  ...userInfoRaw,
-                  role: (userInfoRaw.role || "").toLowerCase(),
-                };
-                setUserData(userInfo);
-                localStorage.setItem("userData", JSON.stringify(userInfo));
-              }
-            } catch (err) {
-              console.warn("Navbar quick fetch failed:", err);
-            }
-          })();
-        }
-      } catch (e) {
-        console.warn("Failed to parse stored userData:", e);
-      }
-    }
-  }, []);
-
-  // استمع ل حدث تغيّر بيانات المستخدم من صفحات أخرى (مثلاً بعد تسجيل الدخول)
-  useEffect(() => {
-    const onUserDataChanged = async () => {
-      const stored = localStorage.getItem("userData");
-      if (stored) {
-        try {
-          const parsed = JSON.parse(stored);
-          parsed.role = (parsed.role || "").toLowerCase();
-          setUserData(parsed);
-
-          // if role missing, fetch quickly from Firestore (cache preferred)
-          if ((!parsed.role || parsed.role === "") && auth?.currentUser?.uid) {
-            try {
-              const docRef = doc(db, "users", auth.currentUser.uid);
-              const docSnap = await getDoc(docRef);
-              if (docSnap.exists()) {
-                const userInfoRaw = {
-                  ...docSnap.data(),
-                  email: auth.currentUser.email,
-                };
-                const userInfo = {
-                  ...userInfoRaw,
-                  role: (userInfoRaw.role || "").toLowerCase(),
-                };
-                setUserData(userInfo);
-                localStorage.setItem("userData", JSON.stringify(userInfo));
-              }
-            } catch (err) {
-              console.warn("Navbar background fetch failed:", err);
-            }
-          }
-        } catch (e) {
-          console.warn("Failed to parse userData from localStorage:", e);
-        }
-      } else {
-        setUserData(null);
-      }
-    };
-
-    window.addEventListener("userDataChanged", onUserDataChanged);
-    return () =>
-      window.removeEventListener("userDataChanged", onUserDataChanged);
-  }, []);
-
-  // متابعة حالة تسجيل الدخول
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      if (currentUser) {
-        try {
-          const docRef = doc(db, "users", currentUser.uid);
-          const docSnap = await getDoc(docRef);
-
-          let userInfo;
-          if (docSnap.exists()) {
-            const userInfoRaw = { ...docSnap.data(), email: currentUser.email };
-            userInfo = {
-              ...userInfoRaw,
-              role: (userInfoRaw.role || "").toLowerCase(),
-            };
-          } else {
-            userInfo = {
-              email: currentUser.email,
-              fullName: "",
-              role: "student",
-            };
-          }
-
-          // حفظ البيانات في state و localStorage
-          setUserData(userInfo);
-          localStorage.setItem("userData", JSON.stringify(userInfo));
-        } catch (error) {
-          console.error("Error fetching user data:", error);
-        }
-      } else {
-        setUserData(null);
-        localStorage.removeItem("userData");
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
+    setUserData(authProfile || null);
+  }, [authProfile]);
 
   const handleLogout = async () => {
-    await signOut(auth);
+    await logout();
     setMenuOpen(false);
     setUserData(null);
-    localStorage.removeItem("userData");
   };
 
   return (
     <nav className="bg-background-dark text-primary-foreground shadow-lg fixed w-full z-50">
-      <div className="container mx-auto flex justify-between items-center px-6 py-4">
+      <div className="container mx-auto flex justify-between items-center px-4 sm:px-6 py-3 sm:py-4">
         {/* Logo */}
-        <Link href="/" className="text-2xl font-bold tracking-wide">
+        <Link
+          href="/"
+          className="text-xl sm:text-2xl font-bold tracking-wide whitespace-nowrap"
+        >
           Neuro bridge
         </Link>
 
@@ -181,20 +74,23 @@ export default function Navbar() {
           {!userData && (
             <>
               <li>
-                <Link
-                  href="/auth/login"
-                  className="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/80"
-                >
-                  تسجيل الدخول
+                <Link href="/auth/login">
+                  <Button
+                    variant="secondary"
+                    size="default"
+                    className="px-4 py-2"
+                  >
+                    تسجيل الدخول
+                  </Button>
                 </Link>
               </li>
               <li className="relative">
-                <button
+                <Button
+                  variant="ghost"
                   onClick={() => setDropdownOpen(!dropdownOpen)}
-                  className="px-4 py-2 bg-accent text-accent-foreground rounded-lg flex items-center gap-1 hover:bg-accent/90"
                 >
                   إنشاء حساب <ChevronDown size={18} />
-                </button>
+                </Button>
                 {dropdownOpen && (
                   <ul className="absolute right-0 mt-2 w-48 bg-white text-black rounded-lg shadow-lg overflow-hidden z-50">
                     <li>
@@ -221,17 +117,16 @@ export default function Navbar() {
 
           {userData && (
             <>
-              <li className="flex items-center gap-2 px-4 py-2 bg-accent text-accent-foreground rounded-lg font-semibold">
-                <div className="w-8 h-8 rounded-full bg-secondary text-white flex items-center justify-center font-bold">
+              <li className="flex items-center gap-2 px-4 py-2 rounded-lg font-semibold">
+                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-secondary to-accent text-white flex items-center justify-center font-bold shadow-md">
                   {userData.fullName
                     ? userData.fullName.charAt(0).toUpperCase()
                     : userData.email.charAt(0).toUpperCase()}
                 </div>
-                {userData.fullName || userData.email}
+                <span className="hidden md:inline-block">
+                  {userData.fullName || userData.email}
+                </span>
               </li>
-
-              {/* رابط مختلف حسب نوع الحساب */}
-              {/* عرض روابط محددة بالدور فقط (نحاول جلب الدور سريعًا في الخلفية) */}
 
               {userData.role === "teacher" && (
                 <li>
@@ -277,24 +172,40 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {menuOpen && (
-        <ul className="md:hidden bg-primary text-primary-foreground px-6 py-4 space-y-3 font-medium shadow-lg">
+        <ul className="md:hidden bg-primary text-primary-foreground px-4 sm:px-6 py-4 space-y-2 font-medium shadow-lg max-h-[calc(100vh-60px)] overflow-y-auto">
           <li>
-            <Link href="/" onClick={() => setMenuOpen(false)}>
+            <Link
+              href="/"
+              onClick={() => setMenuOpen(false)}
+              className="block px-4 py-3 rounded-lg hover:bg-primary-light/20"
+            >
               الرئيسية
             </Link>
           </li>
           <li>
-            <Link href="#services" onClick={() => setMenuOpen(false)}>
+            <Link
+              href="#services"
+              onClick={() => setMenuOpen(false)}
+              className="block px-4 py-3 rounded-lg hover:bg-primary-light/20"
+            >
               الخدمات
             </Link>
           </li>
           <li>
-            <Link href="#about" onClick={() => setMenuOpen(false)}>
+            <Link
+              href="#about"
+              onClick={() => setMenuOpen(false)}
+              className="block px-4 py-3 rounded-lg hover:bg-primary-light/20"
+            >
               من نحن
             </Link>
           </li>
           <li>
-            <Link href="#contact" onClick={() => setMenuOpen(false)}>
+            <Link
+              href="#contact"
+              onClick={() => setMenuOpen(false)}
+              className="block px-4 py-3 rounded-lg hover:bg-primary-light/20"
+            >
               تواصل معنا
             </Link>
           </li>
@@ -304,7 +215,7 @@ export default function Navbar() {
               <li>
                 <Link
                   href="/auth/login"
-                  className="block px-4 py-2 bg-secondary text-secondary-foreground rounded-lg"
+                  className="block px-4 py-3 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/80"
                   onClick={() => setMenuOpen(false)}
                 >
                   تسجيل الدخول
@@ -313,7 +224,7 @@ export default function Navbar() {
               <li>
                 <Link
                   href="/auth/register?role=teacher"
-                  className="block px-4 py-2 bg-accent text-accent-foreground rounded-lg"
+                  className="block px-4 py-3 bg-accent text-accent-foreground rounded-lg hover:bg-accent/80"
                   onClick={() => setMenuOpen(false)}
                 >
                   إنشاء حساب معلم
@@ -322,7 +233,7 @@ export default function Navbar() {
               <li>
                 <Link
                   href="/auth/register?role=student"
-                  className="block px-4 py-2 bg-accent text-accent-foreground rounded-lg"
+                  className="block px-4 py-3 bg-accent text-accent-foreground rounded-lg hover:bg-accent/80"
                   onClick={() => setMenuOpen(false)}
                 >
                   إنشاء حساب طالب
@@ -333,20 +244,22 @@ export default function Navbar() {
 
           {userData && (
             <>
-              <li className="flex items-center gap-2 px-4 py-2 bg-accent text-primary-dark rounded-lg font-semibold">
-                <div className="w-8 h-8 rounded-full bg-secondary text-white flex items-center justify-center font-bold">
+              <li className="flex items-center gap-2 px-4 py-3 bg-accent text-primary-dark rounded-lg font-semibold">
+                <div className="w-8 h-8 rounded-full bg-secondary text-white flex items-center justify-center font-bold text-sm">
                   {userData.fullName
                     ? userData.fullName.charAt(0).toUpperCase()
                     : userData.email.charAt(0).toUpperCase()}
                 </div>
-                {userData.fullName || userData.email}
+                <span className="truncate text-sm sm:text-base">
+                  {userData.fullName || userData.email}
+                </span>
               </li>
 
               {userData.role === "teacher" && (
                 <li>
                   <Link
                     href="/dashboard/teacher"
-                    className="block px-4 py-2 bg-primary text-white rounded-lg"
+                    className="block px-4 py-3 bg-primary text-white rounded-lg hover:bg-primary/80"
                     onClick={() => setMenuOpen(false)}
                   >
                     لوحة المعلم
@@ -357,7 +270,7 @@ export default function Navbar() {
                 <li>
                   <Link
                     href="/dashboard/student"
-                    className="block px-4 py-2 bg-primary text-white rounded-lg"
+                    className="block px-4 py-3 bg-primary text-white rounded-lg hover:bg-primary/80"
                     onClick={() => setMenuOpen(false)}
                   >
                     لوحة الطالب
@@ -365,14 +278,12 @@ export default function Navbar() {
                 </li>
               )}
 
-              {/* لا نعرض رابط عام هنا — ننتظر دور المستخدم ليظهر الرابط المخصص */}
-
               <li>
                 <button
                   onClick={handleLogout}
-                  className="block w-full text-left px-4 py-2 bg-secondary text-secondary-foreground rounded-lg"
+                  className="w-full flex items-center justify-start gap-2 px-4 py-3 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/80"
                 >
-                  تسجيل خروج
+                  تسجيل خروج <LogOut size={16} />
                 </button>
               </li>
             </>

@@ -5,6 +5,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "@/lib/firebase/config";
 import { doc, getDoc, getDocFromCache } from "firebase/firestore";
 import { Eye, EyeOff, LogIn } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
 export default function LoginClient() {
@@ -123,18 +124,18 @@ export default function LoginClient() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-dark via-primary to-accent-soft px-4">
-      <div className="bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl w-full max-w-md p-8 border border-white/20">
-        <h2 className="text-3xl font-bold text-center text-white mb-2">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-dark via-primary to-accent-soft px-3 sm:px-4 py-6">
+      <div className="bg-white/10 backdrop-blur-xl rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-sm p-6 sm:p-8 border border-white/20">
+        <h2 className="text-2xl sm:text-3xl font-bold text-center text-white mb-2">
           تسجيل الدخول
         </h2>
-        <p className="text-center text-white/70 mb-6 text-sm">
+        <p className="text-center text-white/70 mb-6 text-xs sm:text-sm">
           أهلاً بك! الرجاء تسجيل الدخول لمتابعة رحلتك التعليمية
         </p>
 
         <form onSubmit={handleLogin}>
           <div className="mb-5">
-            <label className="block mb-2 text-sm text-white/80">
+            <label className="block mb-2 text-xs sm:text-sm text-white/80">
               البريد الإلكتروني
             </label>
             <input
@@ -142,13 +143,13 @@ export default function LoginClient() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="example@email.com"
-              className="w-full px-4 py-3 rounded-lg bg-white/20 text-white placeholder-white/50 focus:ring-2 focus:ring-accent-soft outline-none"
+              className="w-full px-3 sm:px-4 py-2 sm:py-3 rounded-lg bg-white/20 text-white placeholder-white/50 focus:ring-2 focus:ring-accent-soft outline-none text-sm"
               required
             />
           </div>
 
           <div className="mb-5 relative">
-            <label className="block mb-2 text-sm text-white/80">
+            <label className="block mb-2 text-xs sm:text-sm text-white/80">
               كلمة المرور
             </label>
             <input
@@ -156,33 +157,36 @@ export default function LoginClient() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full px-4 py-3 rounded-lg bg-white/20 text-white placeholder-white/50 focus:ring-2 focus:ring-accent-soft outline-none"
+              className="w-full px-3 sm:px-4 py-2 sm:py-3 rounded-lg bg-white/20 text-white placeholder-white/50 focus:ring-2 focus:ring-accent-soft outline-none text-sm"
               required
             />
             <button
               type="button"
-              className="absolute top-9 right-4 text-white/60 hover:text-white"
+              className="absolute top-9 sm:top-10 right-3 sm:right-4 text-white/60 hover:text-white"
               onClick={() => setShowPassword(!showPassword)}
               aria-label={
                 showPassword ? "إخفاء كلمة المرور" : "إظهار كلمة المرور"
               }
             >
-              {showPassword ? <EyeOff /> : <Eye />}
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
           </div>
 
           {error && (
-            <p className="text-red-400 text-sm mb-3 text-center">{error}</p>
+            <p className="text-red-400 text-xs sm:text-sm mb-3 text-center">
+              {error}
+            </p>
           )}
 
-          <button
+          <Button
             type="submit"
             disabled={loading}
-            className="w-full flex items-center justify-center gap-2 bg-accent-soft text-primary-dark font-semibold py-3 rounded-lg hover:brightness-110 transition-all disabled:opacity-50"
+            className="w-full flex items-center justify-center gap-2 text-sm sm:text-base"
+            variant="secondary"
           >
-            <LogIn size={20} />
+            <LogIn size={18} />
             {loading ? "جاري تسجيل الدخول..." : "تسجيل الدخول"}
-          </button>
+          </Button>
         </form>
       </div>
     </div>
