@@ -124,18 +124,18 @@ export default function LoginClient() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-dark via-primary to-accent-soft px-3 sm:px-4 py-6">
-      <div className="bg-white/10 backdrop-blur-xl rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-sm p-6 sm:p-8 border border-white/20">
-        <h2 className="text-2xl sm:text-3xl font-bold text-center text-white mb-2">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#E6F3F4] via-[#F7FBFF] to-[#E8F2F6] px-3 sm:px-4 py-6">
+      <div className="bg-white/95 backdrop-blur-xl rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-sm p-6 sm:p-8 border border-outline">
+        <h2 className="text-2xl sm:text-3xl font-bold text-center text-[#1D2A32] mb-2">
           تسجيل الدخول
         </h2>
-        <p className="text-center text-white/70 mb-6 text-xs sm:text-sm">
+        <p className="text-center text-[#4B5B66] mb-6 text-xs sm:text-sm">
           أهلاً بك! الرجاء تسجيل الدخول لمتابعة رحلتك التعليمية
         </p>
 
         <form onSubmit={handleLogin}>
           <div className="mb-5">
-            <label className="block mb-2 text-xs sm:text-sm text-white/80">
+            <label className="block mb-2 text-xs sm:text-sm text-[#1D2A32]">
               البريد الإلكتروني
             </label>
             <input
@@ -143,13 +143,13 @@ export default function LoginClient() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="example@email.com"
-              className="w-full px-3 sm:px-4 py-2 sm:py-3 rounded-lg bg-white/20 text-white placeholder-white/50 focus:ring-2 focus:ring-accent-soft outline-none text-sm"
+              className="w-full px-3 sm:px-4 py-2 sm:py-3 rounded-lg bg-white text-[#1D2A32] placeholder-[#8696A5] border border-outline focus:ring-2 focus:ring-primary outline-none text-sm"
               required
             />
           </div>
 
           <div className="mb-5 relative">
-            <label className="block mb-2 text-xs sm:text-sm text-white/80">
+            <label className="block mb-2 text-xs sm:text-sm text-[#1D2A32]">
               كلمة المرور
             </label>
             <input
@@ -157,12 +157,12 @@ export default function LoginClient() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full px-3 sm:px-4 py-2 sm:py-3 rounded-lg bg-white/20 text-white placeholder-white/50 focus:ring-2 focus:ring-accent-soft outline-none text-sm"
+              className="w-full px-3 sm:px-4 py-2 sm:py-3 rounded-lg bg-white text-[#1D2A32] placeholder-[#8696A5] border border-outline focus:ring-2 focus:ring-primary outline-none text-sm"
               required
             />
             <button
               type="button"
-              className="absolute top-9 sm:top-10 right-3 sm:right-4 text-white/60 hover:text-white"
+              className="absolute top-9 sm:top-10 right-3 sm:right-4 text-[#7A8A99] hover:text-primary"
               onClick={() => setShowPassword(!showPassword)}
               aria-label={
                 showPassword ? "إخفاء كلمة المرور" : "إظهار كلمة المرور"
@@ -173,7 +173,7 @@ export default function LoginClient() {
           </div>
 
           {error && (
-            <p className="text-red-400 text-xs sm:text-sm mb-3 text-center">
+            <p className="text-red-500 text-xs sm:text-sm mb-3 text-center">
               {error}
             </p>
           )}
@@ -182,7 +182,7 @@ export default function LoginClient() {
             type="submit"
             disabled={loading}
             className="w-full flex items-center justify-center gap-2 text-sm sm:text-base"
-            variant="secondary"
+            variant="default"
           >
             <LogIn size={18} />
             {loading ? "جاري تسجيل الدخول..." : "تسجيل الدخول"}

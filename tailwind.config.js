@@ -9,56 +9,51 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // ألوان رئيسية (أزرق بنفسجي)
+        // لوحة هادئة بألوان محيطية دافئة
         primary: {
-          DEFAULT: "#6366F1", // Indigo 500
-          hover: "#4F46E5",   // Indigo 600
-          dark: "#3730A3",    // Indigo 800
-          light: "#E0E7FF",   // Indigo 100
-          foreground: "#FFFFFF",
+          DEFAULT: "#2F5D62", // Sage teal
+          hover: "#23484D",
+          dark: "#1A3033",
+          light: "#DFEEE9",
+          foreground: "#F7F9F8",
         },
 
-        // ألوان ثانوية (بنفسجي فخم)
         secondary: {
-          DEFAULT: "#8B5CF6", // Violet 500
-          hover: "#7C3AED",   // Violet 600
-          dark: "#5B21B6",    // Violet 800
-          light: "#EDE9FE",   // Violet 100
-          foreground: "#FFFFFF",
+          DEFAULT: "#90A8C3", // Dusty blue
+          hover: "#7A92AD",
+          dark: "#5C6F86",
+          light: "#E6EDF5",
+          foreground: "#12212F",
         },
 
-        // ألوان مميزة (تركوازي / أزرق فاتح)
         accent: {
-          DEFAULT: "#14B8A6", // Teal 500
-          hover: "#0D9488",   // Teal 600
-          soft: "#CCFBF1",    // Teal 100
-          foreground: "#042F2E", // Teal Dark
+          DEFAULT: "#7BC6C4", // Seafoam
+          hover: "#65B3B0",
+          soft: "#E6F7F7",
+          foreground: "#0E2C30",
         },
 
-        // ألوان محايدة
         muted: {
-          DEFAULT: "#F3F4F6", // Gray 100
-          darker: "#9CA3AF",  // Gray 400
-          foreground: "#374151", // Gray 700
+          DEFAULT: "#F5F7FA",
+          darker: "#94A3B8",
+          foreground: "#3F4C5D",
         },
 
-        // خلفيات
         background: {
-          DEFAULT: "#FFFFFF", // أبيض
-          dark: "#111827",    // Gray 900
+          DEFAULT: "#F9FBFD",
+          dark: "#0F172A",
         },
 
-        // ألوان إضافية
-        bgdark: "#1F2937",    // Gray 800
-        textlight: "#F9FAFB", // Gray 50
-        glass: "rgba(255,255,255,0.05)",
-        glassdark: "rgba(0,0,0,0.1)",
-        overlay: "rgba(0,0,0,0.4)",
+        surface: "#FFFFFF",
+        outline: "#D7DFE9",
+        textlight: "#F8FAFC",
+        glass: "rgba(255,255,255,0.65)",
+        glassdark: "rgba(15,23,42,0.65)",
+        overlay: "rgba(15,23,42,0.35)",
 
-        // ألوان التحذير
         destructive: {
-          DEFAULT: "#F87171", // Red 400
-          hover: "#EF4444",   // Red 500
+          DEFAULT: "#F97070",
+          hover: "#EF4444",
           foreground: "#FFFFFF",
         },
       },

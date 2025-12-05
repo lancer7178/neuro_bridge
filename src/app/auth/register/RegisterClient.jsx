@@ -12,7 +12,9 @@ export default function RegisterClient() {
 
   const validRoles = ["student", "teacher"];
   const roleFromUrlRaw = searchParams.get("role");
-  const roleFromUrl = validRoles.includes(roleFromUrlRaw) ? roleFromUrlRaw : "student";
+  const roleFromUrl = validRoles.includes(roleFromUrlRaw)
+    ? roleFromUrlRaw
+    : "student";
 
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -43,7 +45,11 @@ export default function RegisterClient() {
     setLoading(true);
     try {
       console.log("بدأ إنشاء المستخدم...");
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       const user = userCredential.user;
       console.log("تم إنشاء المستخدم:", user.uid);
 
@@ -51,7 +57,9 @@ export default function RegisterClient() {
         fullName,
         email,
         role,
-        profilePic: `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=random&color=fff`,
+        profilePic: `https://ui-avatars.com/api/?name=${encodeURIComponent(
+          fullName
+        )}&background=random&color=fff`,
         createdAt: serverTimestamp(),
       };
 
@@ -75,59 +83,71 @@ export default function RegisterClient() {
   }
 
   return (
-    <div className="min-h-screen flex items-start justify-center bg-gradient-to-br from-primary-dark via-primary to-accent-soft px-4 pt-24">
-      <div className="bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl w-full max-w-md p-8 border border-white/20">
-        <h2 className="text-3xl font-bold text-center text-white mb-2">إنشاء حساب</h2>
-        <p className="text-center text-white/70 mb-6 text-sm">
+    <div className="min-h-screen flex items-start justify-center bg-gradient-to-br from-[#E6F3F4] via-[#F7FBFF] to-[#E8F2F6] px-4 pt-24">
+      <div className="bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl w-full max-w-md p-8 border border-outline">
+        <h2 className="text-3xl font-bold text-center text-[#1D2A32] mb-2">
+          إنشاء حساب
+        </h2>
+        <p className="text-center text-[#4B5B66] mb-6 text-sm">
           انضم إلينا وابدأ رحلتك التعليمية المميزة
         </p>
 
         <form onSubmit={handleRegister}>
           <div className="mb-5">
-            <label className="block mb-2 text-sm text-white/80">الاسم الكامل</label>
+            <label className="block mb-2 text-sm text-[#1D2A32]">
+              الاسم الكامل
+            </label>
             <input
               type="text"
               placeholder="اكتب اسمك"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg bg-white/20 text-white placeholder-white/50 focus:ring-2 focus:ring-accent-soft outline-none"
+              className="w-full px-4 py-3 rounded-lg bg-white text-[#1D2A32] placeholder-[#8696A5] border border-outline focus:ring-2 focus:ring-primary outline-none"
             />
           </div>
 
           <div className="mb-5">
-            <label className="block mb-2 text-sm text-white/80">البريد الإلكتروني</label>
+            <label className="block mb-2 text-sm text-[#1D2A32]">
+              البريد الإلكتروني
+            </label>
             <input
               type="email"
               placeholder="example@email.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg bg-white/20 text-white placeholder-white/50 focus:ring-2 focus:ring-accent-soft outline-none"
+              className="w-full px-4 py-3 rounded-lg bg-white text-[#1D2A32] placeholder-[#8696A5] border border-outline focus:ring-2 focus:ring-primary outline-none"
             />
           </div>
 
           <div className="mb-5 relative">
-            <label className="block mb-2 text-sm text-white/80">كلمة المرور</label>
+            <label className="block mb-2 text-sm text-[#1D2A32]">
+              كلمة المرور
+            </label>
             <input
               type={showPassword ? "text" : "password"}
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg bg-white/20 text-white placeholder-white/50 focus:ring-2 focus:ring-accent-soft outline-none"
+              className="w-full px-4 py-3 rounded-lg bg-white text-[#1D2A32] placeholder-[#8696A5] border border-outline focus:ring-2 focus:ring-primary outline-none"
             />
             <button
               type="button"
-              className="absolute top-9 right-4 text-white/60 hover:text-white"
+              className="absolute top-9 right-4 text-[#7A8A99] hover:text-primary"
               onClick={() => setShowPassword(!showPassword)}
-              aria-label={showPassword ? "إخفاء كلمة المرور" : "إظهار كلمة المرور"}
+              aria-label={
+                showPassword ? "إخفاء كلمة المرور" : "إظهار كلمة المرور"
+              }
             >
               {showPassword ? <EyeOff /> : <Eye />}
             </button>
           </div>
 
           <div className="mb-5">
-            <label className="block mb-2 text-sm text-white/80">نوع الحساب</label>
+            <label className="block mb-2 text-sm text-[#1D2A32]">
+              نوع الحساب
+            </label>
             <div className="flex gap-4">
-              <span className="flex-1 py-3 rounded-lg border bg-accent-soft text-primary-dark border-accent-soft text-center font-semibold">
+              <span className="flex-1 py-3 rounded-lg border bg-secondary/20 text-[#1D2A32] border-outline text-center font-semibold">
                 {role === "teacher" ? "معلم" : "طالب"}
               </span>
             </div>
@@ -136,19 +156,25 @@ export default function RegisterClient() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex items-center justify-center gap-2 bg-accent-soft text-primary-dark font-semibold py-3 rounded-lg hover:brightness-110 transition-all disabled:opacity-50"
+            className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground font-semibold py-3 rounded-lg hover:bg-primary-hover transition-all disabled:opacity-50"
           >
             <UserPlus size={20} />
             {loading ? "جارٍ الإنشاء..." : "إنشاء الحساب"}
           </button>
         </form>
 
-        {error && <p className="mt-4 text-center text-red-500 text-sm">{error}</p>}
-        {successMessage && <p className="mt-4 text-center text-green-500 text-sm">{successMessage}</p>}
+        {error && (
+          <p className="mt-4 text-center text-red-500 text-sm">{error}</p>
+        )}
+        {successMessage && (
+          <p className="mt-4 text-center text-green-600 text-sm">
+            {successMessage}
+          </p>
+        )}
 
         <p className="mt-6 text-center text-white/80 text-sm">
           لديك حساب بالفعل؟
-          <a href="/auth/login" className="text-accent-soft hover:underline ml-1">
+          <a href="/auth/login" className="text-primary hover:underline ml-1">
             تسجيل الدخول
           </a>
         </p>

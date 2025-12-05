@@ -19,29 +19,29 @@ const highlights = ["خطة تعلم تفاعلية لكل طالب", "متاب�
 export default function Hero() {
   return (
     <section
-      className="relative isolate min-h-screen flex items-center bg-gradient-to-br from-accent-soft via-primary to-primary-dark text-primary-foreground overflow-hidden pt-16 sm:pt-20 lg:pt-24 -mt-16 sm:-mt-20 lg:-mt-24"
+      className="relative isolate min-h-screen flex items-center bg-gradient-to-br from-[#E6F3F4] via-[#F7FBFF] to-[#E8F2F6] text-foreground overflow-hidden pt-16 sm:pt-20 lg:pt-24 -mt-16 sm:-mt-20 lg:-mt-24"
       dir="rtl"
     >
       <div
-        className="absolute inset-0 opacity-30"
+        className="absolute inset-0 opacity-60"
         aria-hidden="true"
         style={{
           backgroundImage:
-            "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.35) 1px, transparent 0)",
-          backgroundSize: "28px 28px",
+            "radial-gradient(circle at 1px 1px, rgba(47,93,98,0.08) 1px, transparent 0)",
+          backgroundSize: "26px 26px",
         }}
       />
 
       <motion.div
         animate={{ y: [0, -30, 0] }}
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        className="pointer-events-none absolute top-8 -left-24 sm:-left-10 h-64 w-64 sm:h-80 sm:w-80 rounded-full bg-accent/30 blur-3xl"
+        className="pointer-events-none absolute top-8 -left-24 sm:-left-10 h-64 w-64 sm:h-80 sm:w-80 rounded-full bg-secondary/40 blur-3xl"
       />
 
       <motion.div
         animate={{ x: [0, 40, 0] }}
         transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-        className="pointer-events-none absolute -bottom-20 -right-32 h-72 w-72 sm:h-96 sm:w-96 rounded-full bg-primary-light/30 blur-3xl"
+        className="pointer-events-none absolute -bottom-20 -right-32 h-72 w-72 sm:h-96 sm:w-96 rounded-full bg-primary/15 blur-3xl"
       />
 
       <div className="relative z-10 mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-12 lg:py-20">
@@ -53,18 +53,18 @@ export default function Hero() {
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
             <div className="flex justify-start lg:justify-start">
-              <div className="inline-flex items-center gap-3 rounded-full border border-white/25 bg-white/6 px-5 py-2 text-sm font-medium text-primary-foreground">
-                <Sparkles className="h-4 w-4 text-accent-light" />
+              <div className="inline-flex items-center gap-3 rounded-full border border-outline bg-white/70 px-5 py-2 text-sm font-medium text-primary shadow-sm">
+                <Sparkles className="h-4 w-4 text-accent" />
                 منصة معتمدة لدمج ذوي الإعاقة التعليمية
               </div>
             </div>
 
             <div className="space-y-4">
-              <h1 className="text-3xl font-extrabold leading-tight text-white sm:text-4xl lg:text-5xl">
+              <h1 className="text-3xl font-extrabold leading-tight text-[#1D2A32] sm:text-4xl lg:text-5xl">
                 نبني جسراً رقمياً يُمكّن كل طالب من
-                <span className="block text-accent mt-1">التعلّم بثقة</span>
+                <span className="block text-primary mt-1">التعلّم بثقة</span>
               </h1>
-              <p className="mx-auto lg:mx-0 max-w-2xl text-base leading-relaxed text-primary-foreground/90 sm:text-lg">
+              <p className="mx-auto lg:mx-0 max-w-2xl text-base leading-relaxed text-[#30414C] sm:text-lg">
                 Neuro Bridge يجمع بين الخبرة الأكاديمية والدعم النفسي في مسارٍ
                 واحد شخصي لكل طالب — جلسات مباشرة، أدوات تفاعلية، وتواصل دائم مع
                 الأسرة.
@@ -75,7 +75,7 @@ export default function Hero() {
               <Button
                 asChild
                 size="lg"
-                className="h-14 min-w-[180px] rounded-full bg-gradient-to-r from-accent via-accent-light to-primary-light px-8 text-base font-semibold text-primary-dark shadow-lg"
+                className="h-14 min-w-[180px] rounded-full bg-gradient-to-r from-primary to-secondary px-8 text-base font-semibold text-primary-foreground shadow-lg shadow-secondary/30 transform-gpu will-change-transform motion-safe:transition-all motion-safe:duration-300 hover:-translate-y-1 hover:scale-[1.03] hover:shadow-2xl"
                 aria-label="ابدأ رحلتك الآن"
               >
                 <Link href="/start">ابدأ رحلتك الآن</Link>
@@ -85,7 +85,7 @@ export default function Hero() {
                 asChild
                 size="lg"
                 variant="outline"
-                className="h-14 min-w-[180px] rounded-full border-white/30 bg-white/10 px-6 text-base text-white backdrop-blur"
+                className="h-14 min-w-[180px] rounded-full border-outline bg-white/80 px-6 text-base text-primary shadow-sm transform-gpu will-change-transform motion-safe:transition-all motion-safe:duration-250 hover:-translate-y-0.5 hover:scale-[1.01] hover:bg-primary/12 hover:border-primary hover:shadow-md"
                 aria-label="تعرّف على البرامج"
               >
                 <Link href="/learn">تعرّف على البرامج</Link>
@@ -97,9 +97,9 @@ export default function Hero() {
                 {highlights.map((item) => (
                   <div
                     key={item}
-                    className="flex min-w-0 items-center gap-2 rounded-full border border-white/12 bg-white/6 px-3 py-2 text-sm text-primary-foreground max-w-full sm:max-w-[360px] leading-tight"
+                    className="flex min-w-0 items-center gap-2 rounded-full border border-outline bg-white/80 px-3 py-2 text-sm text-[#30414C] max-w-full sm:max-w-[360px] leading-tight shadow-sm"
                   >
-                    <CheckCircle2 className="h-4 w-4 flex-shrink-0 text-accent-light" />
+                    <CheckCircle2 className="h-4 w-4 flex-shrink-0 text-primary" />
                     <span className="truncate text-right">{item}</span>
                   </div>
                 ))}
@@ -113,7 +113,7 @@ export default function Hero() {
             transition={{ duration: 0.9, ease: "easeOut", delay: 0.05 }}
           >
             <div className="absolute inset-0 -z-10 rounded-[36px] bg-gradient-to-br from-white/30 to-white/0 blur-3xl" />
-            <div className="relative overflow-visible rounded-[28px] border border-white/12 bg-white/6 p-2 backdrop-blur-md hover:scale-[1.01] transition-transform duration-500">
+            <div className="relative overflow-visible rounded-[28px] border border-outline bg-white/80 p-2 backdrop-blur-md hover:scale-[1.01] transition-transform duration-500 shadow-xl shadow-secondary/20">
               <div className="aspect-[4/3] w-full overflow-hidden rounded-2xl">
                 <Image
                   src="https://images.pexels.com/photos/1001914/pexels-photo-1001914.jpeg"
@@ -125,7 +125,7 @@ export default function Hero() {
                 />
               </div>
               <motion.div
-                className="absolute left-4 bottom-4 md:top-3 md:bottom-auto z-30 flex items-center gap-3 rounded-full bg-white/10 px-3 py-2 text-xs font-semibold text-white backdrop-blur shadow-lg"
+                className="absolute left-4 bottom-4 md:top-3 md:bottom-auto z-30 flex items-center gap-3 rounded-full bg-primary/90 px-3 py-2 text-xs font-semibold text-white shadow-lg"
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.42, delay: 0.28 }}
@@ -144,7 +144,7 @@ export default function Hero() {
               </motion.div>
 
               <motion.div
-                className="absolute right-4 top-4 hidden md:flex z-30 w-64 rounded-3xl border border-white/8 bg-gradient-to-br from-primary-dark/85 to-primary/75 p-4 text-right text-white shadow-2xl"
+                className="absolute right-4 top-4 hidden md:flex z-30 w-64 rounded-3xl border border-outline bg-gradient-to-br from-primary to-secondary p-4 text-right text-white shadow-2xl"
                 initial={{ opacity: 0, y: -12, scale: 0.98 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ duration: 0.55, delay: 0.52 }}
@@ -160,22 +160,22 @@ export default function Hero() {
               </motion.div>
 
               <motion.div
-                className="absolute left-4 top-4 hidden md:flex z-30 w-48 rounded-2xl border border-white/12 bg-white/10 p-3 text-right text-white backdrop-blur shadow-md"
+                className="absolute left-4 top-4 hidden md:flex z-30 w-48 rounded-2xl border border-outline bg-white/85 p-3 text-right text-primary backdrop-blur shadow-md"
                 initial={{ opacity: 0, y: -12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.68 }}
               >
                 <div className="w-full">
                   <div className="flex items-center justify-between">
-                    <p className="text-xs text-white/75">معدل التقدّم</p>
-                    <span className="inline-flex text-xs bg-white/6 text-white px-2 py-0.5 rounded">
+                    <p className="text-xs text-primary/70">معدل التقدّم</p>
+                    <span className="inline-flex text-xs bg-secondary/20 text-primary px-2 py-0.5 rounded">
                       مباشر
                     </span>
                   </div>
                   <p className="mt-2 text-2xl font-bold">86%</p>
-                  <div className="mt-2 h-2 rounded-full bg-white/20">
+                  <div className="mt-2 h-2 rounded-full bg-muted">
                     <div
-                      className="h-full rounded-full bg-accent"
+                      className="h-full rounded-full bg-primary"
                       style={{ width: "86%" }}
                     />
                   </div>
@@ -185,21 +185,21 @@ export default function Hero() {
           </motion.div>
 
           <motion.div
-            className="order-3 lg:col-span-2 rounded-3xl border border-white/20 bg-white/10 p-6 sm:p-8 text-right text-primary-foreground shadow-2xl shadow-black/30 backdrop-blur"
+            className="order-3 lg:col-span-2 rounded-3xl border border-outline bg-white/80 p-6 sm:p-8 text-right text-[#1D2A32] shadow-2xl shadow-secondary/20 backdrop-blur"
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut", delay: 0.4 }}
           >
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <p className="text-xs uppercase tracking-[0.4em] text-white/70">
+                <p className="text-xs uppercase tracking-[0.4em] text-primary/70">
                   NEURO BRIDGE IMPACT
                 </p>
-                <h2 className="mt-2 text-2xl font-bold text-white">
+                <h2 className="mt-2 text-2xl font-bold text-[#1D2A32]">
                   أرقام تُلهمنا للاستمرار
                 </h2>
               </div>
-              <p className="text-sm text-white/80">
+              <p className="text-sm text-[#30414C]">
                 نتائج محدثة أسبوعياً بالتعاون مع المعلمين والأسر لضمان مسار واضح
                 لكل طالب.
               </p>
@@ -209,15 +209,15 @@ export default function Hero() {
               {stats.map((stat, index) => (
                 <motion.div
                   key={stat.label}
-                  className="rounded-2xl border border-white/15 bg-white/10 p-5 text-right shadow-lg shadow-black/20"
+                  className="rounded-2xl border border-outline bg-white/85 p-5 text-right shadow-lg shadow-secondary/20"
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.15 * index }}
                 >
-                  <p className="text-3xl font-bold text-white sm:text-4xl">
+                  <p className="text-3xl font-bold text-primary sm:text-4xl">
                     {stat.value}
                   </p>
-                  <p className="mt-2 text-sm text-white/80">{stat.label}</p>
+                  <p className="mt-2 text-sm text-[#30414C]">{stat.label}</p>
                 </motion.div>
               ))}
             </div>

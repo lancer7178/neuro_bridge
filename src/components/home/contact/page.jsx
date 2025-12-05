@@ -6,18 +6,18 @@ export default function ContactSection() {
   return (
     <section
       id="contact"
-      className="relative min-h-screen flex items-center py-12 sm:py-20 bg-gradient-to-br from-primary-dark via-primary to-accent-soft text-white overflow-hidden"
+      className="relative min-h-screen flex items-center py-12 sm:py-20 bg-gradient-to-br from-[#E6F3F4] via-[#F7FBFF] to-[#E8F2F6] text-foreground overflow-hidden"
     >
       {/* عناصر خلفية زخرفية مع حركة */}
       <motion.div
         animate={{ x: [0, 30, 0] }}
         transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-0 -left-32 sm:-left-20 w-64 sm:w-72 h-64 sm:h-72 bg-blue-500/20 rounded-full blur-3xl"
+        className="absolute top-0 -left-32 sm:-left-20 w-64 sm:w-72 h-64 sm:h-72 bg-secondary/25 rounded-full blur-3xl"
       />
       <motion.div
         animate={{ y: [0, -30, 0] }}
         transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute bottom-0 -right-32 sm:-right-20 w-64 sm:w-80 h-64 sm:h-80 bg-accent/20 rounded-full blur-3xl"
+        className="absolute bottom-0 -right-32 sm:-right-20 w-64 sm:w-80 h-64 sm:h-80 bg-primary/15 rounded-full blur-3xl"
       />
 
       <div className="relative container mx-auto px-4 sm:px-6 lg:px-20">
@@ -29,8 +29,10 @@ export default function ContactSection() {
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-3xl sm:text-4xl font-bold mb-4">تواصل معنا</h2>
-          <p className="text-white/90 max-w-2xl mx-auto leading-relaxed text-sm sm:text-base">
+          <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-[#1D2A32]">
+            تواصل معنا
+          </h2>
+          <p className="text-[#30414C] max-w-2xl mx-auto leading-relaxed text-sm sm:text-base">
             نحن هنا لدعمك وتوفير المساعدة التي تحتاجها. يمكنك التواصل معنا عبر
             النموذج أو الطرق التالية.
           </p>
@@ -39,48 +41,48 @@ export default function ContactSection() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12">
           {/* نموذج التواصل */}
           <motion.form
-            className="bg-white/10 backdrop-blur-lg p-6 sm:p-8 rounded-xl sm:rounded-2xl shadow-xl border border-white/10"
+            className="bg-white/90 backdrop-blur-lg p-6 sm:p-8 rounded-xl sm:rounded-2xl shadow-xl border border-outline"
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7 }}
             viewport={{ once: true }}
           >
             <div className="mb-6">
-              <label className="block mb-2 text-xs sm:text-sm font-medium">
+              <label className="block mb-2 text-xs sm:text-sm font-medium text-[#1D2A32]">
                 الاسم الكامل
               </label>
               <input
                 type="text"
                 placeholder="اكتب اسمك"
-                className="w-full px-4 py-2 sm:py-3 rounded-lg bg-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-accent transition-all text-sm"
+                className="w-full px-4 py-2 sm:py-3 rounded-lg bg-white text-[#1D2A32] placeholder-[#8696A5] border border-outline focus:outline-none focus:ring-2 focus:ring-accent transition-all text-sm"
               />
             </div>
 
             <div className="mb-6">
-              <label className="block mb-2 text-xs sm:text-sm font-medium">
+              <label className="block mb-2 text-xs sm:text-sm font-medium text-[#1D2A32]">
                 البريد الإلكتروني
               </label>
               <input
                 type="email"
                 placeholder="example@email.com"
-                className="w-full px-4 py-2 sm:py-3 rounded-lg bg-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-accent transition-all text-sm"
+                className="w-full px-4 py-2 sm:py-3 rounded-lg bg-white text-[#1D2A32] placeholder-[#8696A5] border border-outline focus:outline-none focus:ring-2 focus:ring-accent transition-all text-sm"
               />
             </div>
 
             <div className="mb-6">
-              <label className="block mb-2 text-xs sm:text-sm font-medium">
+              <label className="block mb-2 text-xs sm:text-sm font-medium text-[#1D2A32]">
                 الرسالة
               </label>
               <textarea
                 rows="5"
                 placeholder="اكتب رسالتك هنا"
-                className="w-full px-4 py-2 sm:py-3 rounded-lg bg-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-accent transition-all text-sm"
+                className="w-full px-4 py-2 sm:py-3 rounded-lg bg-white text-[#1D2A32] placeholder-[#8696A5] border border-outline focus:outline-none focus:ring-2 focus:ring-accent transition-all text-sm"
               ></textarea>
             </div>
 
             <button
               type="submit"
-              className="w-full bg-accent text-accent-foreground font-semibold px-8 py-3 sm:py-4 rounded-lg shadow-lg hover:bg-accent-hover transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-accent/60 text-sm sm:text-base"
+              className="w-full bg-accent text-accent-foreground font-semibold px-8 py-3 sm:py-4 rounded-lg shadow-lg hover:bg-accent-hover transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-accent/30 text-sm sm:text-base"
             >
               إرسال الرسالة
             </button>
@@ -95,7 +97,7 @@ export default function ContactSection() {
             viewport={{ once: true }}
           >
             {/* بيانات التواصل */}
-            <div className="bg-white/10 p-6 rounded-2xl shadow-lg border border-white/10 space-y-6">
+            <div className="bg-white/85 p-6 rounded-2xl shadow-lg border border-outline space-y-6">
               {[
                 {
                   Icon: Mail,
@@ -110,12 +112,14 @@ export default function ContactSection() {
                   className="flex items-center gap-4"
                   whileHover={{ scale: 1.05 }}
                 >
-                  <div className="bg-accent/20 p-3 rounded-full">
-                    <Icon className="w-6 h-6 text-accent" />
+                  <div className="bg-primary/10 p-3 rounded-full">
+                    <Icon className="w-6 h-6 text-primary" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold">{title}</h3>
-                    <p className="text-white/80">{value}</p>
+                    <h3 className="text-lg font-semibold text-[#1D2A32]">
+                      {title}
+                    </h3>
+                    <p className="text-[#4B5B66]">{value}</p>
                   </div>
                 </motion.div>
               ))}
