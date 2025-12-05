@@ -52,69 +52,48 @@ export default function LoginClient() {
         uid: user.uid,
         email: user.email,
         displayName: user.displayName || null,
+        role: "student", // default until Firestore doc arrives
       };
       try {
-        // small sync write so UI can read it immediately
         localStorage.setItem("userData", JSON.stringify(minimalUser));
-        // notify any listeners (e.g., navbar) that user data changed
         try {
           window.dispatchEvent(new Event("userDataChanged"));
-        } catch (e) {
-          /* ignore: non-critical */
-        }
+        } catch (e) {}
+        try {
+          window.dispatchEvent(
+            new CustomEvent("authProfileUpdated", { detail: minimalUser })
+          );
+        } catch (e) {}
       } catch (e) {
         console.warn("localStorage write failed (minimal):", e);
       }
 
-      // حاول جلب مستند المستخدم من كاش Firestore بسرعة (إذا كان مُمكَّنًا)
-      try {
-        const cachedRef = doc(db, "users", user.uid);
-        try {
-          const cachedSnap = await getDocFromCache(cachedRef);
-          if (cachedSnap && cachedSnap.exists()) {
-            const fullCached = cachedSnap.data();
-            const merged = {
-              ...fullCached,
-              email: user.email,
-              role: (fullCached.role || "").toLowerCase(),
-            };
-            localStorage.setItem("userData", JSON.stringify(merged));
-            try {
-              window.dispatchEvent(new Event("userDataChanged"));
-            } catch (e) {}
-          }
-        } catch (cacheErr) {
-          // cache miss is normal; we'll fetch in background below
-        }
-      } catch (e) {
-        console.warn("Quick cache read failed:", e);
-      }
+      // توجيه فوري إلى لوحة الطالب (الأسرع)، وسيتم تصحيح الوجهة إذا كان الدور معلماً
+      router.replace("/dashboard/student");
 
-      // توجه فوراً للصفحة الرئيسية لإعطاء إحساس أسرع بالتجاوب
-      router.push("/");
-
-      // اجلب بيانات المستخدم الكاملة في الخلفية وحدث التخزين عند الوصول
+      // جلب بيانات الدور في الخلفية ثم إعادة التوجيه إذا لزم
       (async () => {
         try {
           const docRef = doc(db, "users", user.uid);
           const docSnap = await getDoc(docRef);
           if (docSnap.exists()) {
             const fullData = docSnap.data();
-            // defer write to avoid blocking the UI thread
-            setTimeout(() => {
+            const roleFromDoc = (fullData.role || "student").toLowerCase();
+            try {
+              localStorage.setItem(
+                "userData",
+                JSON.stringify({ ...fullData, email: user.email })
+              );
               try {
-                localStorage.setItem("userData", JSON.stringify(fullData));
-                try {
-                  window.dispatchEvent(new Event("userDataChanged"));
-                } catch (e) {
-                  /* ignore */
-                }
-              } catch (e) {
-                console.warn("localStorage write failed (full):", e);
-              }
-            }, 0);
+                window.dispatchEvent(new Event("userDataChanged"));
+              } catch (e) {}
+            } catch (e) {}
+
+            if (roleFromDoc === "teacher") {
+              router.replace("/dashboard/teacher");
+            }
           } else {
-            console.warn("User doc not found (background fetch).");
+            console.warn("User doc not found; keeping default student route.");
           }
         } catch (bgErr) {
           console.error("Background fetch user doc failed:", bgErr);

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Menu,
@@ -22,6 +22,7 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [userData, setUserData] = useState(null);
+  const [hydrated, setHydrated] = useState(false);
 
   // Use centralized Auth context
   const {
@@ -31,10 +32,66 @@ export default function Navbar() {
     logout,
   } = useAuth();
 
+  const normalize = useCallback((data) => {
+    if (!data) return null;
+    const role = (data.role || "student").toLowerCase();
+    return { ...data, role };
+  }, []);
+
+  // Hydrate from localStorage on mount (client-side only)
+  useEffect(() => {
+    setHydrated(true);
+    try {
+      const cached = JSON.parse(localStorage.getItem("userData") || "null");
+      if (cached) {
+        setUserData(normalize(cached));
+      }
+    } catch (e) {}
+  }, [normalize]);
+
   // Keep local derived state for any small UI interactions
   useEffect(() => {
-    setUserData(authProfile || null);
-  }, [authProfile]);
+    if (!hydrated) return;
+    // Prefer auth profile
+    if (authProfile) {
+      setUserData(normalize(authProfile));
+      return;
+    }
+  }, [authProfile, hydrated, normalize]);
+
+  // React to storage/userDataChanged to keep navbar in sync across tabs and async auth
+  useEffect(() => {
+    if (!hydrated) return;
+
+    const handleStorage = () => {
+      try {
+        const cached = JSON.parse(localStorage.getItem("userData") || "null");
+        setUserData(normalize(cached));
+      } catch (e) {}
+    };
+
+    const handleUserDataChanged = () => handleStorage();
+
+    const handleAuthProfileUpdated = (ev) => {
+      try {
+        const d = ev?.detail;
+        setUserData(normalize(d));
+      } catch (e) {}
+    };
+
+    window.addEventListener("storage", handleStorage);
+    window.addEventListener("userDataChanged", handleUserDataChanged);
+    window.addEventListener("authProfileUpdated", handleAuthProfileUpdated);
+
+    return () => {
+      window.removeEventListener("storage", handleStorage);
+      window.removeEventListener("userDataChanged", handleUserDataChanged);
+      window.removeEventListener(
+        "authProfileUpdated",
+        handleAuthProfileUpdated
+      );
+    };
+  }, [hydrated, normalize]);
 
   const handleLogout = async () => {
     await logout();

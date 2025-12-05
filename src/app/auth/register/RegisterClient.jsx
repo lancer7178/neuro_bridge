@@ -68,10 +68,12 @@ export default function RegisterClient() {
       const user = userCredential.user;
       console.log("تم إنشاء المستخدم:", user.uid);
 
+      const normalizedRole = (role || "student").toLowerCase();
+
       const userInfo = {
         fullName,
         email,
-        role,
+        role: normalizedRole,
         profilePic: `https://ui-avatars.com/api/?name=${encodeURIComponent(
           fullName
         )}&background=random&color=fff`,
@@ -84,11 +86,29 @@ export default function RegisterClient() {
       const userInfoForStorage = { ...userInfo };
       delete userInfoForStorage.createdAt;
       localStorage.setItem("userData", JSON.stringify(userInfoForStorage));
-
+      try {
+        window.dispatchEvent(new Event("userDataChanged"));
+      } catch (e) {}
+      try {
+        window.dispatchEvent(
+          new CustomEvent("authProfileUpdated", { detail: userInfoForStorage })
+        );
+      } catch (e) {}
       setSuccessMessage("تم إنشاء الحساب بنجاح!");
       setFullName("");
       setEmail("");
       setPassword("");
+
+      // Redirect immediately to dashboard for the chosen role
+      try {
+        const dest =
+          normalizedRole === "teacher"
+            ? "/dashboard/teacher"
+            : "/dashboard/student";
+        router.replace(dest);
+      } catch (e) {
+        console.warn("Redirect after register failed:", e);
+      }
     } catch (err) {
       console.error("خطأ أثناء إنشاء الحساب:", err);
       setError(err.message || "حدث خطأ أثناء إنشاء الحساب");

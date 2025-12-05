@@ -10,12 +10,16 @@ export default function TeacherDashboard() {
   const { user, profile, loading, logout } = useAuth();
 
   useEffect(() => {
-    if (!loading) {
-      if (!user) {
-        router.replace("/auth/login");
-      } else if ((profile?.role || "student").toLowerCase() !== "teacher") {
-        router.replace("/");
-      }
+    if (loading) return;
+
+    if (!user) {
+      router.replace("/auth/login");
+      return;
+    }
+
+    const roleVal = (profile?.role || "student").toLowerCase();
+    if (roleVal !== "teacher") {
+      router.replace(roleVal === "student" ? "/dashboard/student" : "/");
     }
   }, [user, profile, loading, router]);
 
@@ -24,11 +28,12 @@ export default function TeacherDashboard() {
     router.replace("/auth/login");
   };
 
-  if (
-    loading ||
-    !user ||
-    (profile && profile.role && profile.role !== "teacher")
-  ) {
+  const fallbackFromStorage =
+    typeof window !== "undefined"
+      ? JSON.parse(localStorage.getItem("userData") || "{}")
+      : {};
+
+  if (loading && !user && !fallbackFromStorage.uid) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <p className="text-lg text-[#4B5B66]">جارٍ التحقق من الحساب...</p>
@@ -36,13 +41,23 @@ export default function TeacherDashboard() {
     );
   }
 
-  const userData =
-    profile ||
-    JSON.parse(
-      typeof window !== "undefined"
-        ? localStorage.getItem("userData") || "{}"
-        : "{}"
-    );
+  if (!user) {
+    router.replace("/auth/login");
+    return null;
+  }
+
+  const role = (
+    profile?.role ||
+    fallbackFromStorage.role ||
+    "student"
+  ).toLowerCase();
+  if (role !== "teacher") {
+    const dest = role === "student" ? "/dashboard/student" : "/";
+    router.replace(dest);
+    return null;
+  }
+
+  const userData = profile || fallbackFromStorage;
 
   return (
     <main dir="rtl" className="pt-24 pb-12 w-full max-w-7xl mx-auto px-6">

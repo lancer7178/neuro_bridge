@@ -10,13 +10,16 @@ export default function StudentDashboard() {
   const { user, profile, loading, logout } = useAuth();
 
   useEffect(() => {
-    if (!loading) {
-      if (!user) {
-        router.replace("/auth/login");
-      } else if ((profile?.role || "student").toLowerCase() !== "student") {
-        // not authorized for student dashboard
-        router.replace("/");
-      }
+    if (loading) return;
+
+    if (!user) {
+      router.replace("/auth/login");
+      return;
+    }
+
+    const roleVal = (profile?.role || "student").toLowerCase();
+    if (roleVal !== "student") {
+      router.replace(roleVal === "teacher" ? "/dashboard/teacher" : "/");
     }
   }, [user, profile, loading, router]);
 
@@ -25,11 +28,13 @@ export default function StudentDashboard() {
     router.replace("/auth/login");
   };
 
-  if (
-    loading ||
-    !user ||
-    (profile && profile.role && profile.role !== "student")
-  ) {
+  const fallbackFromStorage =
+    typeof window !== "undefined"
+      ? JSON.parse(localStorage.getItem("userData") || "{}")
+      : {};
+
+  // Show the spinner only if we truly have no user and no cached data while loading
+  if (loading && !user && !fallbackFromStorage.uid) {
     return (
       <div dir="rtl" className="flex items-center justify-center min-h-screen">
         <div className="text-center">
@@ -39,13 +44,23 @@ export default function StudentDashboard() {
     );
   }
 
-  const userData =
-    profile ||
-    JSON.parse(
-      typeof window !== "undefined"
-        ? localStorage.getItem("userData") || "{}"
-        : "{}"
-    );
+  if (!user) {
+    router.replace("/auth/login");
+    return null;
+  }
+
+  const role = (
+    profile?.role ||
+    fallbackFromStorage.role ||
+    "student"
+  ).toLowerCase();
+  if (role !== "student") {
+    const dest = role === "teacher" ? "/dashboard/teacher" : "/";
+    router.replace(dest);
+    return null;
+  }
+
+  const userData = profile || fallbackFromStorage;
 
   return (
     <main dir="rtl" className="pt-24 pb-12 w-full max-w-7xl mx-auto px-6">
