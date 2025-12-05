@@ -116,7 +116,7 @@ export default function Hero() {
             <div className="relative overflow-visible rounded-[28px] border border-outline bg-white/80 p-2 backdrop-blur-md hover:scale-[1.01] transition-transform duration-500 shadow-xl shadow-secondary/20">
               <div className="aspect-[4/3] w-full overflow-hidden rounded-2xl">
                 <Image
-                  src="https://images.pexels.com/photos/1001914/pexels-photo-1001914.jpeg"
+                  src="/hero.jpg"
                   alt="جلسة دعم تعليمية"
                   width={640}
                   height={520}

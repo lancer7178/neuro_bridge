@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 
 export default function AboutUs() {
@@ -32,11 +33,16 @@ export default function AboutUs() {
             transition={{ duration: 1, ease: "easeOut" }}
             viewport={{ once: true }}
           >
-            <img
-              src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=800&q=80"
+            <Image
+              // src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=800&q=80"
+              src="/kids2.jpg"
               alt="طلاب يتعاونون"
-              className="rounded-2xl shadow-xl border border-outline"
+              width={800}
+              height={600}
+              className="rounded-2xl shadow-xl border border-outline object-cover"
+              priority
             />
+
             {/* إطار زخرفي حول الصورة */}
             <div className="absolute -top-4 -left-4 w-full h-full border-4 border-secondary rounded-2xl -z-10"></div>
           </motion.div>
