@@ -6,6 +6,8 @@ import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase/config";
 import { UserPlus, Eye, EyeOff } from "lucide-react";
 import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/lib/AuthContext";
 
 export default function RegisterClient() {
   const searchParams = useSearchParams();
@@ -25,6 +27,19 @@ export default function RegisterClient() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+
+  const router = useRouter();
+  const { user: authUser, profile: authProfile } = useAuth();
+
+  useEffect(() => {
+    // If user is already authenticated, redirect them away from registration
+    if (authUser) {
+      const roleVal = (authProfile?.role || "student").toLowerCase();
+      const dest =
+        roleVal === "teacher" ? "/dashboard/teacher" : "/dashboard/student";
+      router.replace(dest);
+    }
+  }, [authUser, authProfile, router]);
 
   useEffect(() => {
     if (role !== roleFromUrl) {

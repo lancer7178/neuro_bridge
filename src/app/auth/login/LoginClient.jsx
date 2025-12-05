@@ -7,14 +7,26 @@ import { doc, getDoc, getDocFromCache } from "firebase/firestore";
 import { Eye, EyeOff, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useAuth } from "@/lib/AuthContext";
 
 export default function LoginClient() {
   const router = useRouter();
+  const { user: authUser, profile: authProfile } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (authUser) {
+      const roleVal = (authProfile?.role || "student").toLowerCase();
+      const dest =
+        roleVal === "teacher" ? "/dashboard/teacher" : "/dashboard/student";
+      router.replace(dest);
+    }
+  }, [authUser, authProfile, router]);
 
   async function handleLogin(e) {
     e.preventDefault();
